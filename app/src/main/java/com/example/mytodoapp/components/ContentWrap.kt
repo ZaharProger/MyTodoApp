@@ -1,7 +1,9 @@
 package com.example.mytodoapp.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
@@ -49,6 +51,11 @@ fun ContentWrap(contentViewModel: ContentViewModel = ContentViewModel()) {
             NavBar(navController, navItems)
         } }
     ) {
-        PageView(navController, contentViewModel)
+        Column(
+            modifier = Modifier
+                .padding(it)
+        ) {
+            PageView(navController, contentViewModel)
+        }
     }
 }
