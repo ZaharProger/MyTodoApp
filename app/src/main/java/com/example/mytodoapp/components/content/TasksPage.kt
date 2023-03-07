@@ -11,9 +11,12 @@ import androidx.compose.ui.unit.sp
 import com.example.mytodoapp.ui.theme.PrimaryLight
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import com.example.mytodoapp.ui.theme.openSansFamily
+import com.example.mytodoapp.viewmodels.ContentViewModel
 
 @Composable
-fun TasksPage() {
+fun TasksPage(contentViewModel: ContentViewModel) {
+    contentViewModel.setTopAppBarHeader("Задачи")
+
     Text(
         text = "Tasks will be here",
         modifier = Modifier

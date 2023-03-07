@@ -11,9 +11,12 @@ import androidx.compose.ui.unit.sp
 import com.example.mytodoapp.ui.theme.PrimaryLight
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import com.example.mytodoapp.ui.theme.openSansFamily
+import com.example.mytodoapp.viewmodels.ContentViewModel
 
 @Composable
-fun SettingsPage() {
+fun SettingsPage(contentViewModel: ContentViewModel) {
+    contentViewModel.setTopAppBarHeader("Настройки")
+
     Text(
         text = "Settings will be here",
         modifier = Modifier

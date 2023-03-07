@@ -14,9 +14,10 @@ import com.example.mytodoapp.components.content.SettingsPage
 import com.example.mytodoapp.components.content.TasksPage
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.ui.theme.PrimaryLight
+import com.example.mytodoapp.viewmodels.ContentViewModel
 
 @Composable
-fun PageView(navController: NavHostController) {
+fun PageView(navController: NavHostController, contentViewModel: ContentViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,13 +29,13 @@ fun PageView(navController: NavHostController) {
             startDestination = Routes.TASKS.stringValue
         ) {
             composable(Routes.TASKS.stringValue) {
-                TasksPage()
+                TasksPage(contentViewModel)
             }
             composable(Routes.CATEGORIES.stringValue) {
-                CategoriesPage()
+                CategoriesPage(contentViewModel)
             }
             composable(Routes.SETTINGS.stringValue) {
-                SettingsPage()
+                SettingsPage(contentViewModel)
             }
         }
     }

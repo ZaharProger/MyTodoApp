@@ -11,9 +11,12 @@ import androidx.compose.ui.unit.sp
 import com.example.mytodoapp.ui.theme.PrimaryLight
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import com.example.mytodoapp.ui.theme.openSansFamily
+import com.example.mytodoapp.viewmodels.ContentViewModel
 
 @Composable
-fun CategoriesPage() {
+fun CategoriesPage(contentViewModel: ContentViewModel) {
+    contentViewModel.setTopAppBarHeader("Категории")
+
     Text(
         text = "Categories will be here",
         modifier = Modifier
