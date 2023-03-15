@@ -12,10 +12,10 @@ import com.example.mytodoapp.R
 import com.example.mytodoapp.viewmodels.ContentViewModel
 
 @Composable
-fun TasksPage(contentViewModel: ContentViewModel) {
+fun TrashPage(contentViewModel: ContentViewModel) {
     contentViewModel.setTopAppBarHeader(
         stringResource(
-            id = R.string.tasks_caption
+            id = R.string.trash_caption
         )
     )
 

@@ -5,16 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.mytodoapp.ui.theme.PrimaryLight
-import com.example.mytodoapp.ui.theme.SecondaryLight
-import com.example.mytodoapp.ui.theme.openSansFamily
 
 @Composable
 fun PageHeader(headerText: String) {
@@ -23,15 +19,13 @@ fun PageHeader(headerText: String) {
         text = headerText,
         modifier = Modifier
             .fillMaxSize()
-            .background(PrimaryLight)
+            .background(MaterialTheme.colors.primary)
             .border(
-                border = BorderStroke(1.dp, SecondaryLight)
+                border = BorderStroke(1.dp, MaterialTheme.colors.secondary)
             )
             .padding(0.dp, 10.dp),
-        color = SecondaryLight,
-        fontFamily = openSansFamily,
-        fontWeight = FontWeight.Light,
-        fontSize = 24.sp,
+        color = MaterialTheme.colors.secondary,
+        style = MaterialTheme.typography.h1,
         textAlign = TextAlign.Center
     )
 }

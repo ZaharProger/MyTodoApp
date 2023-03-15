@@ -5,12 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.mytodoapp.components.ContentWrap
 import com.example.mytodoapp.ui.theme.MyTodoAppTheme
-import com.example.mytodoapp.ui.theme.PrimaryLight
+import com.example.mytodoapp.viewmodels.ContentViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,20 +16,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyTodoAppTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = PrimaryLight
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
-                    ContentWrap()
+                    ContentWrap(
+                        ContentViewModel()
+                    )
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MyTodoAppTheme {
-        ContentWrap()
     }
 }

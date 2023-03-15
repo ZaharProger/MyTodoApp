@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomAppBar
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -19,23 +20,24 @@ import com.example.mytodoapp.components.navbar.NavBar
 import com.example.mytodoapp.components.navbar.PageView
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.NavBarItem
-import com.example.mytodoapp.ui.theme.PrimaryLight
 import com.example.mytodoapp.viewmodels.ContentViewModel
 
 @Composable
-fun ContentWrap(contentViewModel: ContentViewModel = ContentViewModel()) {
+fun ContentWrap(
+    contentViewModel: ContentViewModel) {
+
     val navController = rememberNavController()
     val navItems = listOf(
-        NavBarItem(Routes.TASKS, R.string.tasks_route, R.drawable.ic_tasks),
-        NavBarItem(Routes.CATEGORIES, R.string.categories_route, R.drawable.ic_categories),
-        NavBarItem(Routes.SETTINGS, R.string.settings_route, R.drawable.ic_settings)
+        NavBarItem(Routes.TASKS, R.string.tasks_caption, R.drawable.ic_tasks),
+        NavBarItem(Routes.CATEGORIES, R.string.categories_caption, R.drawable.ic_categories),
+        NavBarItem(Routes.TRASH, R.string.trash_caption, R.drawable.ic_trash)
     )
 
     val headerText by contentViewModel.topAppBarHeader.observeAsState("")
 
     Scaffold(
         topBar = { TopAppBar(
-            backgroundColor = PrimaryLight,
+            backgroundColor = MaterialTheme.colors.primary,
             modifier = Modifier
                 .fillMaxWidth(),
             contentPadding = PaddingValues(0.dp)
@@ -43,7 +45,7 @@ fun ContentWrap(contentViewModel: ContentViewModel = ContentViewModel()) {
             PageHeader(headerText)
         } },
         bottomBar = { BottomAppBar(
-            backgroundColor = PrimaryLight,
+            backgroundColor = MaterialTheme.colors.primary,
             modifier = Modifier
                 .fillMaxWidth(),
             contentPadding = PaddingValues(0.dp)
