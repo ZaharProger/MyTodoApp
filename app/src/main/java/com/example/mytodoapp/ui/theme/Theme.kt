@@ -10,14 +10,16 @@ val DarkColorPalette = darkColors(
     primary = PrimaryDark,
     secondary = SecondaryDark,
     primaryVariant = ListItemDark,
-    secondaryVariant = InactiveDark
+    secondaryVariant = InactiveDark,
+    onSecondary = PlaceholderDark
 )
 
 val LightColorPalette = lightColors(
     primary = PrimaryLight,
     secondary = SecondaryLight,
     primaryVariant = ListItemLight,
-    secondaryVariant = InactiveLight
+    secondaryVariant = InactiveLight,
+    onSecondary = PlaceholderLight
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

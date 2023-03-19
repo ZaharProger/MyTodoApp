@@ -1,4 +1,4 @@
-package com.example.mytodoapp.entities
+package com.example.mytodoapp.entities.ui
 
 import androidx.annotation.StringRes
 import com.example.mytodoapp.constants.Routes

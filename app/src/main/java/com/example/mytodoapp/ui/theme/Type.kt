@@ -13,12 +13,22 @@ val Typography = Typography(
     body1 = TextStyle(
         fontWeight = FontWeight.Light,
         fontSize = 18.sp,
-        fontFamily = FontFamily(Font(R.font.open_sans_light))
+        fontFamily = FontFamily(Font(R.font.open_sans_light)),
     ),
     body2 = TextStyle(
         fontWeight = FontWeight.Light,
         fontSize = 16.sp,
         fontFamily = FontFamily(Font(R.font.open_sans_light))
+    ),
+    subtitle1 = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        fontFamily = FontFamily(Font(R.font.open_sans_light)),
+    ),
+    subtitle2 = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        fontFamily = FontFamily(Font(R.font.open_sans_light)),
     ),
     h1 = TextStyle(
         fontWeight = FontWeight.Light,

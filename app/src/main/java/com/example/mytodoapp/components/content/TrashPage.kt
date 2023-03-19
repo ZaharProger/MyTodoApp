@@ -9,11 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.mytodoapp.R
-import com.example.mytodoapp.viewmodels.ContentViewModel
+import com.example.mytodoapp.entities.AppContext
 
 @Composable
-fun TrashPage(contentViewModel: ContentViewModel) {
-    contentViewModel.setTopAppBarHeader(
+fun TrashPage() {
+    AppContext.contentViewModel?.setTopAppBarHeader(
         stringResource(
             id = R.string.trash_caption
         )

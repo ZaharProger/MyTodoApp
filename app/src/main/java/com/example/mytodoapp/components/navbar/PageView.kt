@@ -10,14 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.mytodoapp.components.content.CategoriesPage
+import com.example.mytodoapp.components.content.category.CategoriesPage
 import com.example.mytodoapp.components.content.TasksPage
 import com.example.mytodoapp.components.content.TrashPage
 import com.example.mytodoapp.constants.Routes
-import com.example.mytodoapp.viewmodels.ContentViewModel
 
 @Composable
-fun PageView(navController: NavHostController, contentViewModel: ContentViewModel) {
+fun PageView(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,13 +28,13 @@ fun PageView(navController: NavHostController, contentViewModel: ContentViewMode
             startDestination = Routes.TASKS.stringValue
         ) {
             composable(Routes.TASKS.stringValue) {
-                TasksPage(contentViewModel)
+                TasksPage()
             }
             composable(Routes.CATEGORIES.stringValue) {
-                CategoriesPage(contentViewModel)
+                CategoriesPage()
             }
             composable(Routes.TRASH.stringValue) {
-                TrashPage(contentViewModel)
+                TrashPage()
             }
         }
     }

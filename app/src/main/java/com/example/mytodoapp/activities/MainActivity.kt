@@ -13,6 +13,7 @@ import com.example.mytodoapp.viewmodels.ContentViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MyTodoAppTheme {
                 Surface(

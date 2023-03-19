@@ -16,7 +16,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.mytodoapp.entities.NavBarItem
+import com.example.mytodoapp.entities.ui.NavBarItem
 
 @Composable
 fun NavBar(

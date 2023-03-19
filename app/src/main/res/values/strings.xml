@@ -3,4 +3,7 @@
     <string name="tasks_caption">Задачи</string>
     <string name="categories_caption">Категории</string>
     <string name="trash_caption">Корзина</string>
+    <string name="add_category">Добавить категорию</string>
+    <string name="category_name_placeholder">Название</string>
+    <string name="add_text">Добавить</string>
 </resources>
