@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
 import com.example.mytodoapp.entities.AppContext
+import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.ui.theme.Error
 import com.example.mytodoapp.ui.theme.SecondaryDark
 import com.example.mytodoapp.ui.theme.SecondaryLight
@@ -29,6 +30,12 @@ fun AddCategory(
     categoryViewModel: CategoryViewModel,
     parentRadius: Dp) {
 
+    val categoryCardBgColor = MaterialTheme.colors.primaryVariant.value
+
+    var isErrorInput by remember {
+        mutableStateOf(false)
+    }
+
     val coroutineScope = rememberCoroutineScope()
     var categoryName by remember {
         mutableStateOf(TextFieldValue(""))
@@ -38,13 +45,14 @@ fun AddCategory(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
+            .background(MaterialTheme.colors.primary)
             .padding(0.dp, 0.dp, 0.dp, 30.dp)
     ) {
         Text(
             text = stringResource(id = R.string.add_category),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(0.dp, 0.dp, 0.dp, 50.dp)
+                .padding(0.dp, 0.dp, 0.dp, 10.dp)
                 .background(
                     color = MaterialTheme.colors.primaryVariant,
                     shape = RoundedCornerShape(
@@ -61,7 +69,7 @@ fun AddCategory(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp, 0.dp, 20.dp, 10.dp),
+                .padding(20.dp, 0.dp, 20.dp, 100.dp),
             value = categoryName,
             label = {
                 Text(
@@ -88,12 +96,13 @@ fun AddCategory(
                 focusedLabelColor = MaterialTheme.colors.secondary,
                 placeholderColor = MaterialTheme.colors.onSecondary,
                 disabledPlaceholderColor = MaterialTheme.colors.secondary
-            )
+            ),
+            isError = isErrorInput
         )
 
         Button(
             modifier = Modifier
-                .padding(10.dp, 0.dp, 10.dp, 20.dp)
+                .padding(10.dp, 0.dp, 10.dp, 0.dp)
                 .fillMaxWidth()
                 .padding(15.dp, 10.dp),
             contentPadding = PaddingValues(5.dp, 15.dp),
@@ -102,12 +111,30 @@ fun AddCategory(
                 backgroundColor = SecondaryLight
             ),
             onClick = {
-                coroutineScope.launch {
-//                    categoryViewModel.add(Category(
-//                        name = categoryName.text,
-//                        color = ""
-//                    ))
-                    AppContext.sheetState.hide()
+                isErrorInput = categoryName.text.isEmpty()
+
+                if (!isErrorInput) {
+                    coroutineScope.launch {
+                        var isBackground = true
+                        var categoryColor = ""
+
+                        while (isBackground) {
+                            val hexChars = ('A'..'F') + ('0'..'9')
+                            val generatedColor = (1..6)
+                                .map { hexChars.shuffled().first() }
+                                .joinToString("")
+
+                            categoryColor = "FF${generatedColor}"
+                            isBackground = categoryCardBgColor == categoryColor.toULong(radix = 16)
+                        }
+                        categoryViewModel.add(
+                            Category(
+                                name = categoryName.text,
+                                color = categoryColor
+                            )
+                        )
+                        AppContext.sheetState.hide()
+                    }
                 }
             }) {
 
