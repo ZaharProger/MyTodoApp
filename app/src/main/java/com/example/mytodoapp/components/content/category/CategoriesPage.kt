@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,36 +13,43 @@ import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
 import com.example.mytodoapp.components.AddButton
 import com.example.mytodoapp.entities.AppContext
+import com.example.mytodoapp.entities.db.Category
 
 @Composable
-fun CategoriesPage() {
-
+fun CategoriesPage(categories: List<Category>) {
     AppContext.contentViewModel?.setTopAppBarHeader(
         stringResource(
             id = R.string.categories_caption
         )
     )
 
-    if (AppContext.categories.isNotEmpty()) {
+    if (categories.isNotEmpty()) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 128.dp),
-            contentPadding = PaddingValues(0.dp),
+            contentPadding = PaddingValues(10.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.primary)
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.Center
+                .background(MaterialTheme.colors.primary),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            state = AppContext.categoriesListState
         ) {
-            var counter = 0
-            items(AppContext.categories) {
-                if (counter == AppContext.categories.size - 1) {
-                    AddButton(hasCaption = false)
+            items(
+                count = categories.size + 1,
+                key = {
+                    if (it == categories.size) {
+                        -1
+                    }
+                    else {
+                        categories[it].uId
+                    }
+                }) {
+                if (it == categories.size) {
+                    AddButton()
                 }
                 else {
-                    CategoryCard(it)
+                    CategoryCard(categories[it])
                 }
-
-                ++counter
             }
         }
     }

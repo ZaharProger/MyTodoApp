@@ -25,13 +25,13 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddButton(hasCaption: Boolean = true) {
+fun AddButton() {
 
     val coroutineScope = rememberCoroutineScope()
 
     Column(
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.primary)
@@ -51,18 +51,17 @@ fun AddButton(hasCaption: Boolean = true) {
                     id = R.drawable.ic_add
                 ),
                 contentDescription = "",
+                alignment = Alignment.Center
             )
         }
 
-        if (hasCaption) {
-            Text(
-                modifier = Modifier
-                    .padding(0.dp, 16.dp, 0.dp, 0.dp),
-                text = stringResource(id = R.string.add_category),
-                color = MaterialTheme.colors.secondary,
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center
-            )
-        }
+        Text(
+            modifier = Modifier
+                .padding(0.dp, 16.dp, 0.dp, 0.dp),
+            text = stringResource(id = R.string.add_category),
+            color = MaterialTheme.colors.secondary,
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center
+        )
     }
 }

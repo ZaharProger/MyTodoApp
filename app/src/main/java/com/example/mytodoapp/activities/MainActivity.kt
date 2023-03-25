@@ -8,7 +8,6 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.example.mytodoapp.components.ContentWrap
 import com.example.mytodoapp.ui.theme.MyTodoAppTheme
-import com.example.mytodoapp.viewmodels.ContentViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,9 +19,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    ContentWrap(
-                        ContentViewModel()
-                    )
+                    ContentWrap()
                 }
             }
         }

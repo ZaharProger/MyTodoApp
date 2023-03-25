@@ -10,13 +10,15 @@ import com.example.mytodoapp.services.DbManager
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(context: Context): ViewModel() {
+    private var _categories: LiveData<List<Category>>
     val categories: LiveData<List<Category>>
+        get() = _categories
     private var categoriesRep: CategoriesRepository
 
     init {
         val dao = DbManager.getInstance(context).categories()
         categoriesRep = CategoriesRepository(dao)
-        categories = categoriesRep.categories
+        _categories = categoriesRep.categories
     }
 
     fun add(category: Category) {

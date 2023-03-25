@@ -2,6 +2,7 @@ package com.example.mytodoapp.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -25,7 +26,7 @@ import com.example.mytodoapp.viewmodels.ContentViewModel
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ContentWrap(
-    contentViewModel: ContentViewModel,
+    contentViewModel: ContentViewModel = ContentViewModel(),
     categoryViewModel: CategoryViewModel = CategoryViewModel(LocalContext.current)) {
 
     val navController = rememberNavController()
@@ -36,15 +37,16 @@ fun ContentWrap(
     )
 
     val headerText by contentViewModel.topAppBarHeader.observeAsState("")
-    val categories by categoryViewModel.categories
-        .observeAsState(categoryViewModel.categories.value ?: listOf())
+    val categories by categoryViewModel.categories.observeAsState(listOf())
 
     AppContext.contentViewModel = contentViewModel
-    AppContext.categories = categories
+    AppContext.categoryViewModel = categoryViewModel
+
     AppContext.sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = false
     )
+    AppContext.categoriesListState = rememberLazyGridState()
 
     val isFullScreen by remember {
         mutableStateOf(false)
@@ -70,7 +72,7 @@ fun ContentWrap(
             when (headerText) {
                 stringResource(id = R.string.tasks_caption) -> {}
                 stringResource(id = R.string.categories_caption) ->
-                    AddCategory(categoryViewModel, sheetRadius)
+                    AddCategory(sheetRadius, categories.size)
                 stringResource(id = R.string.trash_caption) -> {}
             }
         },
@@ -102,7 +104,7 @@ fun ContentWrap(
                 modifier = Modifier
                     .padding(it)
             ) {
-                PageView(navController)
+                PageView(navController, categories)
             }
         }
     }

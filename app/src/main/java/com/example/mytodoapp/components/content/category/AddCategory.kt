@@ -21,15 +21,13 @@ import com.example.mytodoapp.ui.theme.Error
 import com.example.mytodoapp.ui.theme.SecondaryDark
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import com.example.mytodoapp.ui.theme.Shapes
-import com.example.mytodoapp.viewmodels.CategoryViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddCategory(
-    categoryViewModel: CategoryViewModel,
-    parentRadius: Dp) {
-
+    parentRadius: Dp,
+    lastCategoryIndex: Int) {
     val categoryCardBgColor = MaterialTheme.colors.primaryVariant.value
 
     var isErrorInput by remember {
@@ -46,7 +44,6 @@ fun AddCategory(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .background(MaterialTheme.colors.primary)
-            .padding(0.dp, 0.dp, 0.dp, 30.dp)
     ) {
         Text(
             text = stringResource(id = R.string.add_category),
@@ -102,7 +99,7 @@ fun AddCategory(
 
         Button(
             modifier = Modifier
-                .padding(10.dp, 0.dp, 10.dp, 0.dp)
+                .padding(10.dp, 0.dp, 10.dp, 30.dp)
                 .fillMaxWidth()
                 .padding(15.dp, 10.dp),
             contentPadding = PaddingValues(5.dp, 15.dp),
@@ -127,13 +124,16 @@ fun AddCategory(
                             categoryColor = "FF${generatedColor}"
                             isBackground = categoryCardBgColor == categoryColor.toULong(radix = 16)
                         }
-                        categoryViewModel.add(
+                        AppContext.categoryViewModel?.add(
                             Category(
-                                name = categoryName.text,
+                                name = categoryName.text.trim(),
                                 color = categoryColor
                             )
                         )
+
+                        categoryName = TextFieldValue("")
                         AppContext.sheetState.hide()
+                        AppContext.categoriesListState.scrollToItem(lastCategoryIndex)
                     }
                 }
             }) {

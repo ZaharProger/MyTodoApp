@@ -14,9 +14,13 @@ import com.example.mytodoapp.components.content.category.CategoriesPage
 import com.example.mytodoapp.components.content.TasksPage
 import com.example.mytodoapp.components.content.TrashPage
 import com.example.mytodoapp.constants.Routes
+import com.example.mytodoapp.entities.db.Category
 
 @Composable
-fun PageView(navController: NavHostController) {
+fun PageView(
+    navController: NavHostController,
+    categories: List<Category>) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,7 +35,7 @@ fun PageView(navController: NavHostController) {
                 TasksPage()
             }
             composable(Routes.CATEGORIES.stringValue) {
-                CategoriesPage()
+                CategoriesPage(categories)
             }
             composable(Routes.TRASH.stringValue) {
                 TrashPage()
