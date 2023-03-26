@@ -6,4 +6,11 @@
     <string name="add_category">Добавить категорию</string>
     <string name="category_name_placeholder">Название</string>
     <string name="add_text">Добавить</string>
+    <string name="yes_button">Да</string>
+    <string name="no_button">Нет</string>
+    <string name="delete_items_title">Удаление записей</string>
+    <string name="delete_items_caption">Вы действительно хотите удалить выбранные записи?</string>
+    <string name="trash_move_title">Добавление в корзину</string>
+    <string name="trash_move_caption">Вы действительно хотите перенести запись в корзину?</string>
+    <string name="trash_move_alert">Добавлено в корзину!</string>
 </resources>

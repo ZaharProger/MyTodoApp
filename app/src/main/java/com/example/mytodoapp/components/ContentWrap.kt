@@ -20,6 +20,7 @@ import com.example.mytodoapp.components.navbar.PageView
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.ui.NavBarItem
+import com.example.mytodoapp.ui.theme.Shapes
 import com.example.mytodoapp.viewmodels.CategoryViewModel
 import com.example.mytodoapp.viewmodels.ContentViewModel
 
@@ -36,32 +37,33 @@ fun ContentWrap(
         NavBarItem(Routes.TRASH, R.string.trash_caption, R.drawable.ic_trash)
     )
 
+    val scaffoldState = rememberScaffoldState()
+
     val headerText by contentViewModel.topAppBarHeader.observeAsState("")
     val categories by categoryViewModel.categories.observeAsState(listOf())
 
-    AppContext.contentViewModel = contentViewModel
-    AppContext.categoryViewModel = categoryViewModel
-
-    AppContext.sheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = false
-    )
-    AppContext.categoriesListState = rememberLazyGridState()
-
-    val isFullScreen by remember {
+    val isDialogOpen = remember {
         mutableStateOf(false)
     }
 
-    val sheetRadius = if (isFullScreen) 0.dp else 10.dp
-    val sheetModifier = if (isFullScreen) {
-        Modifier.fillMaxSize()
-    }
-    else {
-        Modifier.fillMaxWidth()
+    val sheetRadius = 10.dp
+
+    AppContext.apply {
+        this.contentViewModel = contentViewModel
+        this.categoryViewModel = categoryViewModel
+        this.sheetState = rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Hidden,
+            confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
+            skipHalfExpanded = true
+        )
+        this.categoriesListState = rememberLazyGridState()
+        this.scaffoldState = scaffoldState
+        this.isDialogOpen = isDialogOpen
     }
 
     ModalBottomSheetLayout(
-        modifier = sheetModifier
+        modifier = Modifier
+            .fillMaxWidth()
             .background(MaterialTheme.colors.primary),
         sheetState = AppContext.sheetState,
         sheetShape = RoundedCornerShape(
@@ -79,6 +81,16 @@ fun ContentWrap(
         scrimColor = com.example.mytodoapp.ui.theme.Scrim
     ) {
         Scaffold(
+            scaffoldState = scaffoldState,
+            snackbarHost = {
+                SnackbarHost(it) {
+                    Snackbar(
+                        backgroundColor = MaterialTheme.colors.primaryVariant,
+                        contentColor = MaterialTheme.colors.secondary,
+                        shape = Shapes.medium,
+                    ) {}
+                }
+            },
             topBar = {
                 TopAppBar(
                     backgroundColor = MaterialTheme.colors.primary,
@@ -105,6 +117,13 @@ fun ContentWrap(
                     .padding(it)
             ) {
                 PageView(navController, categories)
+                if (isDialogOpen.value) {
+                    AlertMessageDialog(
+                        title = stringResource(id = R.string.trash_move_title),
+                        caption = stringResource(id = R.string.trash_move_caption),
+                        isDialogOpen
+                    )
+                }
             }
         }
     }

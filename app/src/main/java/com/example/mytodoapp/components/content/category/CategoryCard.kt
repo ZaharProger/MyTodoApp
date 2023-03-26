@@ -1,9 +1,6 @@
 package com.example.mytodoapp.components.content.category
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,9 +17,11 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
+import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.ui.theme.Shapes
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryCard(category: Category) {
     val red = category.color.substring((2..3)).toInt(radix = 16)
@@ -34,6 +33,12 @@ fun CategoryCard(category: Category) {
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
+            .combinedClickable(
+                onLongClick = {
+                    AppContext.isDialogOpen.value = true
+                },
+                onClick = {}
+            )
             .background(
                 color = MaterialTheme.colors.primaryVariant,
                 shape = Shapes.medium
