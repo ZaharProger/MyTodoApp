@@ -30,6 +30,11 @@ val Typography = Typography(
         fontSize = 16.sp,
         fontFamily = FontFamily(Font(R.font.open_sans_light)),
     ),
+    caption = TextStyle(
+        fontWeight = FontWeight.Light,
+        fontSize = 12.sp,
+        fontFamily = FontFamily(Font(R.font.open_sans_light)),
+    ),
     h1 = TextStyle(
         fontWeight = FontWeight.Light,
         fontSize = 24.sp,

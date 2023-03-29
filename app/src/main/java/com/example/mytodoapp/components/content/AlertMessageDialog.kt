@@ -1,4 +1,4 @@
-package com.example.mytodoapp.components
+package com.example.mytodoapp.components.content
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

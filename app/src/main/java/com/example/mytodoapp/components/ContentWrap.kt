@@ -3,6 +3,7 @@ package com.example.mytodoapp.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -14,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.mytodoapp.AppSnackBar
 import com.example.mytodoapp.R
+import com.example.mytodoapp.components.content.AddButton
+import com.example.mytodoapp.components.content.AlertMessageDialog
 import com.example.mytodoapp.components.content.PageHeader
 import com.example.mytodoapp.components.content.category.AddCategory
 import com.example.mytodoapp.components.navbar.NavBar
@@ -49,6 +52,9 @@ fun ContentWrap(
     val isSnackBarActive = remember {
         mutableStateOf(false)
     }
+    val isFabActive = remember {
+        mutableStateOf(true)
+    }
 
     val sheetRadius = 10.dp
 
@@ -61,6 +67,7 @@ fun ContentWrap(
             skipHalfExpanded = true
         )
         this.categoriesListState = rememberLazyGridState()
+        this.tasksListState = rememberLazyListState()
         this.isDialogOpen = isDialogOpen
     }
 
@@ -84,6 +91,13 @@ fun ContentWrap(
     ) {
         Scaffold(
             scaffoldState = scaffoldState,
+            floatingActionButton = {
+                if (isFabActive.value) {
+                    AddButton(hasCaption = false)
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+            isFloatingActionButtonDocked = false,
             snackbarHost = {
                 SnackbarHost(
                     hostState = scaffoldState.snackbarHostState
@@ -108,7 +122,7 @@ fun ContentWrap(
                         .fillMaxWidth(),
                     contentPadding = PaddingValues(0.dp)
                 ) {
-                    NavBar(navController, navItems)
+                    NavBar(navController, navItems, isFabActive)
                 }
             }
         ) {

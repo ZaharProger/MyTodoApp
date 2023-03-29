@@ -1,4 +1,4 @@
-package com.example.mytodoapp.components
+package com.example.mytodoapp.components.content
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,28 +13,36 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
+import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddButton() {
-
+fun AddButton(
+    isFabActive: Boolean = true,
+    hasCaption: Boolean = true
+) {
     val coroutineScope = rememberCoroutineScope()
+    var buttonModifier = Modifier
+        .background(Color.Transparent)
+
+    if (!isFabActive) {
+        buttonModifier = buttonModifier.fillMaxSize()
+    }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.primary)
+        horizontalAlignment = if (isFabActive) Alignment.End else Alignment.CenterHorizontally,
+        verticalArrangement = if (isFabActive) Arrangement.Bottom else Arrangement.Center,
+        modifier = buttonModifier
     ) {
         IconButton(
             modifier = Modifier
@@ -43,7 +51,10 @@ fun AddButton() {
                 .padding(5.dp),
             onClick = {
                 coroutineScope.launch {
-                    AppContext.sheetState.show()
+                    when (AppContext.currentRoute) {
+                        Routes.CATEGORIES.stringValue -> AppContext.sheetState.show()
+                        Routes.TASKS.stringValue -> {}
+                    }
                 }
             }) {
             Image(
@@ -55,13 +66,15 @@ fun AddButton() {
             )
         }
 
-        Text(
-            modifier = Modifier
-                .padding(0.dp, 16.dp, 0.dp, 0.dp),
-            text = stringResource(id = R.string.add_category),
-            color = MaterialTheme.colors.secondary,
-            style = MaterialTheme.typography.body1,
-            textAlign = TextAlign.Center
-        )
+        if (hasCaption) {
+            Text(
+                modifier = Modifier
+                    .padding(0.dp, 16.dp, 0.dp, 0.dp),
+                text = stringResource(id = R.string.add_category),
+                color = MaterialTheme.colors.secondary,
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }

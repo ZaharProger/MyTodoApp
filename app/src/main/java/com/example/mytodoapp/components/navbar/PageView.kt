@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.mytodoapp.components.content.category.CategoriesPage
-import com.example.mytodoapp.components.content.TasksPage
+import com.example.mytodoapp.components.content.task.TasksPage
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.db.Category
 
@@ -31,7 +31,7 @@ fun PageView(
             startDestination = Routes.TASKS.stringValue
         ) {
             composable(Routes.TASKS.stringValue) {
-                TasksPage()
+                TasksPage(categories)
             }
             composable(Routes.CATEGORIES.stringValue) {
                 CategoriesPage(categories)

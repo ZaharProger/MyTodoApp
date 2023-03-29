@@ -23,7 +23,7 @@ import com.example.mytodoapp.ui.theme.Shapes
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CategoryCard(category: Category) {
+fun CategoryFullCard(category: Category) {
     val red = category.color.substring((2..3)).toInt(radix = 16)
     val green = category.color.substring((4..5)).toInt(radix = 16)
     val blue = category.color.substring((6..7)).toInt(radix = 16)

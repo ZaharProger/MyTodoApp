@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
-import com.example.mytodoapp.components.AddButton
+import com.example.mytodoapp.components.content.AddButton
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
 
@@ -45,10 +45,10 @@ fun CategoriesPage(categories: List<Category>) {
                     }
                 }) {
                 if (it == categories.size) {
-                    AddButton()
+                    AddButton(isFabActive = false)
                 }
                 else {
-                    CategoryCard(categories[it])
+                    CategoryFullCard(categories[it])
                 }
             }
         }
@@ -58,7 +58,7 @@ fun CategoriesPage(categories: List<Category>) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AddButton()
+            AddButton(isFabActive = false)
         }
     }
 }
