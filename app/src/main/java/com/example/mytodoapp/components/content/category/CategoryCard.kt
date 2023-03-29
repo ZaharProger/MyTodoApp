@@ -36,6 +36,7 @@ fun CategoryCard(category: Category) {
             .combinedClickable(
                 onLongClick = {
                     AppContext.isDialogOpen.value = true
+                    AppContext.selectedItems = mutableListOf(category)
                 },
                 onClick = {}
             )

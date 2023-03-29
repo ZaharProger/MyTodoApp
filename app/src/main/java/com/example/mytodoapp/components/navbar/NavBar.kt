@@ -16,6 +16,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.mytodoapp.constants.Routes
+import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.ui.NavBarItem
 
 @Composable
@@ -33,6 +35,7 @@ fun NavBar(
     ) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
+        AppContext.currentRoute = currentRoute ?: Routes.TASKS.stringValue
 
         items.forEach { item ->
             BottomNavigationItem(

@@ -14,8 +14,4 @@ class CategoriesRepository(private val categoriesDao: CategoriesDao) {
     suspend fun remove(category: Category) {
         categoriesDao.removeCategory(category)
     }
-
-    suspend fun update(category: Category) {
-        categoriesDao.updateCategory(category)
-    }
 }

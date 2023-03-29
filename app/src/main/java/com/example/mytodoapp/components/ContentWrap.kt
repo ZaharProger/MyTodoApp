@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.example.mytodoapp.AppSnackBar
 import com.example.mytodoapp.R
 import com.example.mytodoapp.components.content.PageHeader
 import com.example.mytodoapp.components.content.category.AddCategory
@@ -20,7 +21,6 @@ import com.example.mytodoapp.components.navbar.PageView
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.ui.NavBarItem
-import com.example.mytodoapp.ui.theme.Shapes
 import com.example.mytodoapp.viewmodels.CategoryViewModel
 import com.example.mytodoapp.viewmodels.ContentViewModel
 
@@ -33,16 +33,20 @@ fun ContentWrap(
     val navController = rememberNavController()
     val navItems = listOf(
         NavBarItem(Routes.TASKS, R.string.tasks_caption, R.drawable.ic_tasks),
-        NavBarItem(Routes.CATEGORIES, R.string.categories_caption, R.drawable.ic_categories),
-        NavBarItem(Routes.TRASH, R.string.trash_caption, R.drawable.ic_trash)
+        NavBarItem(Routes.CATEGORIES, R.string.categories_caption, R.drawable.ic_categories)
     )
 
-    val scaffoldState = rememberScaffoldState()
+    val scaffoldState = rememberScaffoldState(
+        snackbarHostState = SnackbarHostState()
+    )
 
     val headerText by contentViewModel.topAppBarHeader.observeAsState("")
     val categories by categoryViewModel.categories.observeAsState(listOf())
 
     val isDialogOpen = remember {
+        mutableStateOf(false)
+    }
+    val isSnackBarActive = remember {
         mutableStateOf(false)
     }
 
@@ -57,7 +61,6 @@ fun ContentWrap(
             skipHalfExpanded = true
         )
         this.categoriesListState = rememberLazyGridState()
-        this.scaffoldState = scaffoldState
         this.isDialogOpen = isDialogOpen
     }
 
@@ -75,7 +78,6 @@ fun ContentWrap(
                 stringResource(id = R.string.tasks_caption) -> {}
                 stringResource(id = R.string.categories_caption) ->
                     AddCategory(sheetRadius, categories.size)
-                stringResource(id = R.string.trash_caption) -> {}
             }
         },
         scrimColor = com.example.mytodoapp.ui.theme.Scrim
@@ -83,12 +85,10 @@ fun ContentWrap(
         Scaffold(
             scaffoldState = scaffoldState,
             snackbarHost = {
-                SnackbarHost(it) {
-                    Snackbar(
-                        backgroundColor = MaterialTheme.colors.primaryVariant,
-                        contentColor = MaterialTheme.colors.secondary,
-                        shape = Shapes.medium,
-                    ) {}
+                SnackbarHost(
+                    hostState = scaffoldState.snackbarHostState
+                ) { snackbarData: SnackbarData ->
+                    AppSnackBar(snackbarData)
                 }
             },
             topBar = {
@@ -112,17 +112,40 @@ fun ContentWrap(
                 }
             }
         ) {
+            if (isSnackBarActive.value) {
+                val snackbarText = stringResource(id = R.string.deletion_complete)
+                LaunchedEffect(
+                    key1 = "",
+                    block = {
+                        val snackBarHandler = scaffoldState.snackbarHostState.showSnackbar(
+                            message = snackbarText,
+                            duration = SnackbarDuration.Short
+                        )
+
+                        when (snackBarHandler) {
+                            SnackbarResult.Dismissed -> isSnackBarActive.value = false
+                            else -> {}
+                        }
+                    }
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .padding(it)
             ) {
                 PageView(navController, categories)
                 if (isDialogOpen.value) {
-                    AlertMessageDialog(
-                        title = stringResource(id = R.string.trash_move_title),
-                        caption = stringResource(id = R.string.trash_move_caption),
-                        isDialogOpen
-                    )
+                    val dialogData = when (AppContext.currentRoute) {
+                        Routes.TASKS.stringValue ->
+                            stringResource(id = R.string.delete_tasks_title) to
+                                    stringResource(id = R.string.delete_tasks_caption)
+                        else ->
+                            stringResource(id = R.string.delete_categories_title) to
+                                stringResource(id = R.string.delete_categories_caption)
+                    }
+
+                    AlertMessageDialog(dialogData, isDialogOpen, isSnackBarActive)
                 }
             }
         }

@@ -12,7 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.mytodoapp.components.content.category.CategoriesPage
 import com.example.mytodoapp.components.content.TasksPage
-import com.example.mytodoapp.components.content.TrashPage
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.db.Category
 
@@ -36,9 +35,6 @@ fun PageView(
             }
             composable(Routes.CATEGORIES.stringValue) {
                 CategoriesPage(categories)
-            }
-            composable(Routes.TRASH.stringValue) {
-                TrashPage()
             }
         }
     }

@@ -11,9 +11,6 @@ interface CategoriesDao {
     @Query("SELECT * FROM categories")
     fun getCategories() : LiveData<List<Category>>
 
-    @Update
-    suspend fun updateCategory(category: Category): Int
-
     @Delete
     suspend fun removeCategory(category: Category): Int
 }

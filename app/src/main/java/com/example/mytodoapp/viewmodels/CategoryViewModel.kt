@@ -27,12 +27,6 @@ class CategoryViewModel(context: Context): ViewModel() {
         }
     }
 
-    fun update(category: Category) {
-        viewModelScope.launch {
-            categoriesRep.update(category)
-        }
-    }
-
     fun remove(category: Category) {
         viewModelScope.launch {
             categoriesRep.remove(category)

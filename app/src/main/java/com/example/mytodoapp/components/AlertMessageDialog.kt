@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,17 +15,14 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
 import com.example.mytodoapp.entities.AppContext
+import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.ui.theme.Shapes
-import kotlinx.coroutines.launch
 
 @Composable
 fun AlertMessageDialog(
-    title: String,
-    caption: String,
-    isDialogOpen: MutableState<Boolean>) {
-
-    val coroutineScope = rememberCoroutineScope()
-    val snackBarText = stringResource(id = R.string.trash_move_alert)
+    dialogData: Pair<String, String>,
+    isDialogOpen: MutableState<Boolean>,
+    isSnackBarActive: MutableState<Boolean>) {
 
     AlertDialog(
         backgroundColor = MaterialTheme.colors.primary,
@@ -36,7 +32,7 @@ fun AlertMessageDialog(
         },
         title = {
             Text(
-                text = title,
+                text = dialogData.first,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colors.primary),
@@ -47,7 +43,7 @@ fun AlertMessageDialog(
         },
         text = {
             Text(
-                text = caption,
+                text = dialogData.second,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colors.primary),
@@ -74,13 +70,10 @@ fun AlertMessageDialog(
                     elevation = null,
                     border = null,
                     onClick = {
+                        AppContext.categoryViewModel
+                            ?.remove(AppContext.selectedItems[0] as Category)
                         isDialogOpen.value = false
-                        coroutineScope.launch {
-                            AppContext.scaffoldState.snackbarHostState.showSnackbar(
-                                message = snackBarText,
-                                duration = SnackbarDuration.Short
-                            )
-                        }
+                        isSnackBarActive.value = true
                     }
                 ) {
                     Text(
