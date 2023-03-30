@@ -1,7 +1,8 @@
-package com.example.mytodoapp.entities.db
+package com.example.mytodoapp.entities.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.mytodoapp.entities.db.Category
 
 @Dao
 interface CategoriesDao {

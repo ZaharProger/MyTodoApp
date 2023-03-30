@@ -14,6 +14,7 @@ import com.example.mytodoapp.R
 import com.example.mytodoapp.components.content.AddButton
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.services.ColorConverter
 
 @Composable
 fun CategoriesPage(categories: List<Category>) {
@@ -24,6 +25,8 @@ fun CategoriesPage(categories: List<Category>) {
     )
 
     if (categories.isNotEmpty()) {
+        val colorConverter = ColorConverter(16)
+
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 128.dp),
             contentPadding = PaddingValues(10.dp),
@@ -48,7 +51,7 @@ fun CategoriesPage(categories: List<Category>) {
                     AddButton(isFabActive = false)
                 }
                 else {
-                    CategoryFullCard(categories[it])
+                    CategoryFullCard(categories[it], colorConverter)
                 }
             }
         }

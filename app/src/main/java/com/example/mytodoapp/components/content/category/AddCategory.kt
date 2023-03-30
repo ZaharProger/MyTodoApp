@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.services.ColorConverter
 import com.example.mytodoapp.ui.theme.Error
 import com.example.mytodoapp.ui.theme.SecondaryDark
 import com.example.mytodoapp.ui.theme.SecondaryLight
@@ -71,7 +72,7 @@ fun AddCategory(
             label = {
                 Text(
                     text = stringResource(
-                        id = R.string.category_name_placeholder
+                        id = R.string.name_placeholder
                     )
                 )
             },
@@ -112,18 +113,17 @@ fun AddCategory(
 
                 if (!isErrorInput) {
                     coroutineScope.launch {
+                        val colorConverter = ColorConverter(16)
+
                         var isBackground = true
                         var categoryColor = ""
 
                         while (isBackground) {
-                            val hexChars = ('A'..'F') + ('0'..'9')
-                            val generatedColor = (1..6)
-                                .map { hexChars.shuffled().first() }
-                                .joinToString("")
-
-                            categoryColor = "FF${generatedColor}"
-                            isBackground = categoryCardBgColor == categoryColor.toULong(radix = 16)
+                            categoryColor = colorConverter.getStringColor()
+                            isBackground = categoryCardBgColor ==
+                                    colorConverter.convertWithRadix(categoryColor)
                         }
+
                         AppContext.categoryViewModel?.add(
                             Category(
                                 name = categoryName.text.trim(),

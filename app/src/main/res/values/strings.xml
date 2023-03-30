@@ -3,7 +3,8 @@
     <string name="tasks_caption">Задачи</string>
     <string name="categories_caption">Категории</string>
     <string name="add_category">Добавить категорию</string>
-    <string name="category_name_placeholder">Название</string>
+    <string name="name_placeholder">Название</string>
+    <string name="task_data_placeholder">Описание задачи</string>
     <string name="add_text">Добавить</string>
     <string name="yes_button">Да</string>
     <string name="no_button">Нет</string>
@@ -12,4 +13,5 @@
     <string name="delete_tasks_title">Удаление задач</string>
     <string name="delete_tasks_caption">Вы действительно хотите удалить выбранные задачи?</string>
     <string name="deletion_complete">Удаление завершено!</string>
+    <string name="not_found">Вы не добавили ни одной задачи!</string>
 </resources>

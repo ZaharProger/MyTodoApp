@@ -4,12 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.mytodoapp.entities.db.CategoriesDao
+import com.example.mytodoapp.entities.db.dao.CategoriesDao
 import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.entities.db.Task
+import com.example.mytodoapp.entities.db.dao.TasksDao
 
-@Database(entities = [Category::class], version = 1)
+@Database(
+    entities = [Category::class, Task::class],
+    version = 2,
+    exportSchema = true
+)
 abstract class DbManager: RoomDatabase() {
     abstract fun categories(): CategoriesDao
+    abstract fun tasks(): TasksDao
 
     companion object {
         private var dbInstance: DbManager? = null
@@ -20,7 +27,9 @@ abstract class DbManager: RoomDatabase() {
                     context,
                     DbManager::class.java,
                     "todo_db"
-                ).build()
+                )
+                .fallbackToDestructiveMigration()
+                .build()
 
                 dbInstance = newInstance
                 newInstance

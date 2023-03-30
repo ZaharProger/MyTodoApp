@@ -26,12 +26,15 @@ import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.ui.NavBarItem
 import com.example.mytodoapp.viewmodels.CategoryViewModel
 import com.example.mytodoapp.viewmodels.ContentViewModel
+import com.example.mytodoapp.viewmodels.TaskViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ContentWrap(
     contentViewModel: ContentViewModel = ContentViewModel(),
-    categoryViewModel: CategoryViewModel = CategoryViewModel(LocalContext.current)) {
+    categoryViewModel: CategoryViewModel = CategoryViewModel(LocalContext.current),
+    taskViewModel: TaskViewModel = TaskViewModel(LocalContext.current)
+) {
 
     val navController = rememberNavController()
     val navItems = listOf(
@@ -45,6 +48,7 @@ fun ContentWrap(
 
     val headerText by contentViewModel.topAppBarHeader.observeAsState("")
     val categories by categoryViewModel.categories.observeAsState(listOf())
+    val tasks by taskViewModel.tasks.observeAsState(listOf())
 
     val isDialogOpen = remember {
         mutableStateOf(false)
@@ -148,7 +152,7 @@ fun ContentWrap(
                 modifier = Modifier
                     .padding(it)
             ) {
-                PageView(navController, categories)
+                PageView(navController, categories, tasks)
                 if (isDialogOpen.value) {
                     val dialogData = when (AppContext.currentRoute) {
                         Routes.TASKS.stringValue ->

@@ -14,11 +14,14 @@ import com.example.mytodoapp.components.content.category.CategoriesPage
 import com.example.mytodoapp.components.content.task.TasksPage
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.entities.db.Task
 
 @Composable
 fun PageView(
     navController: NavHostController,
-    categories: List<Category>) {
+    categories: List<Category>,
+    tasks: List<Task>
+) {
 
     Column(
         modifier = Modifier
@@ -31,7 +34,7 @@ fun PageView(
             startDestination = Routes.TASKS.stringValue
         ) {
             composable(Routes.TASKS.stringValue) {
-                TasksPage(categories)
+                TasksPage(tasks, categories)
             }
             composable(Routes.CATEGORIES.stringValue) {
                 CategoriesPage(categories)

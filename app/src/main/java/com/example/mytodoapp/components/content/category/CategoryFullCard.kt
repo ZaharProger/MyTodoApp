@@ -19,15 +19,18 @@ import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.services.ColorConverter
 import com.example.mytodoapp.ui.theme.Shapes
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CategoryFullCard(category: Category) {
-    val red = category.color.substring((2..3)).toInt(radix = 16)
-    val green = category.color.substring((4..5)).toInt(radix = 16)
-    val blue = category.color.substring((6..7)).toInt(radix = 16)
-    val alpha = category.color.substring((0..1)).toInt(radix = 16)
+fun CategoryFullCard(
+    category: Category,
+    colorConverter: ColorConverter
+) {
+
+    val (red, green, blue, alpha) = colorConverter.getRgba(category.color)
+    val cardColor = Color(red, green, blue, alpha)
 
     Column(
         horizontalAlignment = CenterHorizontally,
@@ -58,7 +61,7 @@ fun CategoryFullCard(category: Category) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(0.dp, 5.dp, 0.dp, 0.dp),
-            colorFilter = ColorFilter.tint(Color(red, green, blue, alpha))
+            colorFilter = ColorFilter.tint(cardColor)
         )
 
         Text(
@@ -66,7 +69,7 @@ fun CategoryFullCard(category: Category) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.primaryVariant),
-            color = Color(red, green, blue, alpha),
+            color = cardColor,
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )

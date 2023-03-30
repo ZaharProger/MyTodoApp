@@ -1,5 +1,6 @@
 package com.example.mytodoapp.components.content
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,11 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
+import com.example.mytodoapp.activities.TaskActivity
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.ui.theme.SecondaryLight
@@ -31,6 +34,8 @@ fun AddButton(
     isFabActive: Boolean = true,
     hasCaption: Boolean = true
 ) {
+    val context = LocalContext.current
+
     val coroutineScope = rememberCoroutineScope()
     var buttonModifier = Modifier
         .background(Color.Transparent)
@@ -53,7 +58,10 @@ fun AddButton(
                 coroutineScope.launch {
                     when (AppContext.currentRoute) {
                         Routes.CATEGORIES.stringValue -> AppContext.sheetState.show()
-                        Routes.TASKS.stringValue -> {}
+                        Routes.TASKS.stringValue -> {
+                            val intent = Intent(context, TaskActivity::class.java)
+                            context.startActivity(intent)
+                        }
                     }
                 }
             }) {

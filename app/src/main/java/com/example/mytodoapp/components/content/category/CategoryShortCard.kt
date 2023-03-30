@@ -13,16 +13,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.services.ColorConverter
 import com.example.mytodoapp.ui.theme.PrimaryLight
 import com.example.mytodoapp.ui.theme.Shapes
 
 @Composable
-fun CategoryShortCard(category: Category) {
-    val red = category.color.substring((2..3)).toInt(radix = 16)
-    val green = category.color.substring((4..5)).toInt(radix = 16)
-    val blue = category.color.substring((6..7)).toInt(radix = 16)
-    val alpha = category.color.substring((0..1)).toInt(radix = 16)
+fun CategoryShortCard(
+    category: Category,
+    colorConverter: ColorConverter
+) {
 
+    val (red, green, blue, alpha) = colorConverter.getRgba(category.color)
     val cardColor = Color(red, green, blue, alpha)
 
     Button(
