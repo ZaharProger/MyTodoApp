@@ -47,18 +47,11 @@ fun ContentWrap(
     )
 
     val headerText by contentViewModel.topAppBarHeader.observeAsState("")
+    val isFabActive by contentViewModel.isFabActive.observeAsState(false)
+    val isDialogOpen by contentViewModel.isDialogOpen.observeAsState(false)
+    val isSnackBarActive by contentViewModel.isSnackBarActive.observeAsState(false)
     val categories by categoryViewModel.categories.observeAsState(listOf())
     val tasks by taskViewModel.tasks.observeAsState(listOf())
-
-    val isDialogOpen = remember {
-        mutableStateOf(false)
-    }
-    val isSnackBarActive = remember {
-        mutableStateOf(false)
-    }
-    val isFabActive = remember {
-        mutableStateOf(true)
-    }
 
     val sheetRadius = 10.dp
 
@@ -72,7 +65,6 @@ fun ContentWrap(
         )
         this.categoriesListState = rememberLazyGridState()
         this.tasksListState = rememberLazyListState()
-        this.isDialogOpen = isDialogOpen
     }
 
     ModalBottomSheetLayout(
@@ -96,7 +88,7 @@ fun ContentWrap(
         Scaffold(
             scaffoldState = scaffoldState,
             floatingActionButton = {
-                if (isFabActive.value) {
+                if (isFabActive) {
                     AddButton(hasCaption = false)
                 }
             },
@@ -126,11 +118,11 @@ fun ContentWrap(
                         .fillMaxWidth(),
                     contentPadding = PaddingValues(0.dp)
                 ) {
-                    NavBar(navController, navItems, isFabActive)
+                    NavBar(navController, navItems)
                 }
             }
         ) {
-            if (isSnackBarActive.value) {
+            if (isSnackBarActive) {
                 val snackbarText = stringResource(id = R.string.deletion_complete)
                 LaunchedEffect(
                     key1 = "",
@@ -141,7 +133,7 @@ fun ContentWrap(
                         )
 
                         when (snackBarHandler) {
-                            SnackbarResult.Dismissed -> isSnackBarActive.value = false
+                            SnackbarResult.Dismissed -> contentViewModel.setSnackBarState(false)
                             else -> {}
                         }
                     }
@@ -153,7 +145,7 @@ fun ContentWrap(
                     .padding(it)
             ) {
                 PageView(navController, categories, tasks)
-                if (isDialogOpen.value) {
+                if (isDialogOpen) {
                     val dialogData = when (AppContext.currentRoute) {
                         Routes.TASKS.stringValue ->
                             stringResource(id = R.string.delete_tasks_title) to
@@ -163,7 +155,7 @@ fun ContentWrap(
                                 stringResource(id = R.string.delete_categories_caption)
                     }
 
-                    AlertMessageDialog(dialogData, isDialogOpen, isSnackBarActive)
+                    AlertMessageDialog(dialogData)
                 }
             }
         }

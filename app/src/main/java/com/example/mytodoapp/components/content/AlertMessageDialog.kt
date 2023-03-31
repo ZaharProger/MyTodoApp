@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,15 +19,13 @@ import com.example.mytodoapp.ui.theme.Shapes
 
 @Composable
 fun AlertMessageDialog(
-    dialogData: Pair<String, String>,
-    isDialogOpen: MutableState<Boolean>,
-    isSnackBarActive: MutableState<Boolean>) {
+    dialogData: Pair<String, String>) {
 
     AlertDialog(
         backgroundColor = MaterialTheme.colors.primary,
         shape = Shapes.medium,
         onDismissRequest = {
-            isDialogOpen.value = false
+            AppContext.contentViewModel?.setDialogState(false)
         },
         title = {
             Text(
@@ -72,8 +69,8 @@ fun AlertMessageDialog(
                     onClick = {
                         AppContext.categoryViewModel
                             ?.remove(AppContext.selectedItems[0] as Category)
-                        isDialogOpen.value = false
-                        isSnackBarActive.value = true
+                        AppContext.contentViewModel?.setDialogState(false)
+                        AppContext.contentViewModel?.setSnackBarState(true)
                     }
                 ) {
                     Text(
@@ -101,7 +98,7 @@ fun AlertMessageDialog(
                     elevation = null,
                     border = null,
                     onClick = {
-                        isDialogOpen.value = false
+                        AppContext.contentViewModel?.setDialogState(false)
                     }
                 ) {
                     Text(

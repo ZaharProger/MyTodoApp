@@ -22,7 +22,5 @@ data class Task(
     @ColumnInfo(name = "data")
     var data: String,
     @ColumnInfo(name = "category_uid")
-    var category: Long,
-    @ColumnInfo(name = "end_date")
-    var endDate: Long
+    var category: Long
 ): BaseEntity()

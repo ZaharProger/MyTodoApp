@@ -38,7 +38,7 @@ fun CategoryFullCard(
         modifier = Modifier
             .combinedClickable(
                 onLongClick = {
-                    AppContext.isDialogOpen.value = true
+                    AppContext.contentViewModel?.setDialogState(true)
                     AppContext.selectedItems = mutableListOf(category)
                 },
                 onClick = {}

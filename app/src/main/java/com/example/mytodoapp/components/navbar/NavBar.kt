@@ -9,7 +9,6 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,9 +23,7 @@ import com.example.mytodoapp.entities.ui.NavBarItem
 @Composable
 fun NavBar(
     navController: NavHostController,
-    items: List<NavBarItem>,
-    isFabActive: MutableState<Boolean>
-) {
+    items: List<NavBarItem>) {
 
     BottomNavigation(
         modifier = Modifier
@@ -39,7 +36,9 @@ fun NavBar(
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
         AppContext.currentRoute = currentRoute ?: Routes.TASKS.stringValue
-        isFabActive.value = AppContext.currentRoute == Routes.TASKS.stringValue
+        AppContext.contentViewModel?.setFabState(
+            AppContext.currentRoute == Routes.TASKS.stringValue
+        )
 
         items.forEach { item ->
             BottomNavigationItem(

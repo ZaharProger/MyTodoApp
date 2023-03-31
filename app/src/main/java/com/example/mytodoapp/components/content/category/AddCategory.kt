@@ -15,9 +15,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
+import com.example.mytodoapp.constants.FieldTypes
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.entities.ui.ValidationCase
 import com.example.mytodoapp.services.ColorConverter
+import com.example.mytodoapp.services.Validator
 import com.example.mytodoapp.ui.theme.Error
 import com.example.mytodoapp.ui.theme.SecondaryDark
 import com.example.mytodoapp.ui.theme.SecondaryLight
@@ -109,7 +112,16 @@ fun AddCategory(
                 backgroundColor = SecondaryLight
             ),
             onClick = {
-                isErrorInput = categoryName.text.isEmpty()
+                val fieldType = FieldTypes.CATEGORY_NAME
+                val validationCase = ValidationCase(categoryName.text, "[\\s]*")
+
+                val validationResult = Validator.validate(
+                    mapOf(
+                        fieldType to validationCase
+                    )
+                )
+
+                isErrorInput = !validationResult[fieldType]!!
 
                 if (!isErrorInput) {
                     coroutineScope.launch {
