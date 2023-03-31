@@ -8,4 +8,4 @@ data class Category(
     @ColumnInfo(name = "name")
     var name: String = "",
     @ColumnInfo(name = "color")
-    var color: String = "00FFFFFF") : BaseEntity()
+    var color: String = "00FFFFFF"): BaseEntity()

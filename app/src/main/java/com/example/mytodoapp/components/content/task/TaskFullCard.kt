@@ -19,25 +19,30 @@ import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
 import com.example.mytodoapp.activities.MainActivity
 import com.example.mytodoapp.constants.FieldTypes
+import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.entities.ui.ValidationCase
 import com.example.mytodoapp.services.ColorConverter
 import com.example.mytodoapp.services.Validator
 import com.example.mytodoapp.ui.theme.*
 import com.example.mytodoapp.viewmodels.CategoryViewModel
+import com.example.mytodoapp.viewmodels.TaskViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TaskFullCard(
-    categoryViewModel: CategoryViewModel = CategoryViewModel(LocalContext.current)
+    currentTask: Task?,
+    categoryViewModel: CategoryViewModel = CategoryViewModel(LocalContext.current),
+    taskViewModel: TaskViewModel = TaskViewModel(LocalContext.current)
 ) {
     val colorConverter = ColorConverter(16)
     val categories by categoryViewModel.categories.observeAsState(listOf())
 
     var headerText by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf(TextFieldValue(currentTask?.title ?: ""))
     }
     var dataText by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf(TextFieldValue(currentTask?.data ?: ""))
     }
     var correctFields by remember {
         mutableStateOf(
@@ -51,18 +56,16 @@ fun TaskFullCard(
     var isExpanded by remember {
         mutableStateOf(false)
     }
-    var selectedOptionText by remember {
-        mutableStateOf(if (categories.isNotEmpty()) categories[0].name else "")
-    }
-    var selectedCategoryColor by remember {
-        val (red, green, blue, alpha) = if (categories.isNotEmpty()) {
-            colorConverter.getRgba(categories[0].color)
-        }
-        else {
-            Array(4) { 0 }
-        }
-
-        mutableStateOf(Color(red, green, blue, alpha))
+    var selectedCategory by remember {
+        mutableStateOf(
+            if (categories.isNotEmpty()) {
+                if (currentTask == null) categories[0] else
+                    categories.find { it.uId == currentTask.category }!!
+            }
+            else {
+                Category()
+            }
+        )
     }
 
     val scrollState = rememberScrollState()
@@ -133,9 +136,11 @@ fun TaskFullCard(
                         isExpanded = !isExpanded
                     }
                 ) {
+                    val (r, g, b, a) = colorConverter.getRgba(selectedCategory.color)
+
                     TextField(
                         readOnly = true,
-                        value = selectedOptionText,
+                        value = selectedCategory.name,
                         onValueChange = { },
                         label = {
                             Text(
@@ -154,7 +159,7 @@ fun TaskFullCard(
                             textColor = PrimaryLight,
                             trailingIconColor = MaterialTheme.colors.secondary,
                             focusedLabelColor = MaterialTheme.colors.secondary,
-                            backgroundColor = selectedCategoryColor
+                            backgroundColor = Color(r, g, b, a)
                         ),
                         shape = Shapes.medium
                     )
@@ -185,8 +190,7 @@ fun TaskFullCard(
                             ) {
                                 Button(
                                     onClick = {
-                                        selectedOptionText = category.name
-                                        selectedCategoryColor = categoryColor
+                                        selectedCategory = category
                                         isExpanded = false
                                     },
                                     shape = Shapes.small,
@@ -260,12 +264,23 @@ fun TaskFullCard(
                                 FieldTypes.TASK_DATA to
                                         ValidationCase(dataText.text, pattern),
                                 FieldTypes.TASK_CATEGORY to
-                                        ValidationCase(selectedOptionText, pattern)
+                                        ValidationCase(selectedCategory.name, pattern)
                             )
                         )
 
                         correctFields = validationResult
                         if (!correctFields.containsValue(false)) {
+                            if (currentTask == null) {
+                                taskViewModel.add(Task(
+                                    title = headerText.text,
+                                    data = dataText.text,
+                                    category = selectedCategory.uId
+                                ))
+                            }
+                            else {
+                                taskViewModel.update(currentTask)
+                            }
+
                             val intent = Intent(context, MainActivity::class.java)
                             context.startActivity(intent)
                         }
