@@ -3,6 +3,7 @@ package com.example.mytodoapp.entities.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
+@kotlinx.serialization.Serializable
 @Entity(tableName = "categories")
 data class Category(
     @ColumnInfo(name = "name")

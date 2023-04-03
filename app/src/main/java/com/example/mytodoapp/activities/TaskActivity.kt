@@ -1,6 +1,5 @@
 package com.example.mytodoapp.activities
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,24 +8,24 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.example.mytodoapp.components.content.task.TaskFullCard
 import com.example.mytodoapp.constants.IntentKeys
+import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.ui.theme.MyTodoAppTheme
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
 
 class TaskActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val intentKey = IntentKeys.CURRENT_TASK.stringValue
+        val taskKey = IntentKeys.CURRENT_TASK.stringValue
+        val categoryKey = IntentKeys.CURRENT_CATEGORY.stringValue
 
-        val currentTask = if (intent.hasExtra(intentKey)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(intentKey, Task::class.java)
-            } else {
-                intent.getParcelableExtra(intentKey)
-            }
+        val currentTask = intent.getStringExtra(taskKey)?.let {
+            Json.decodeFromString<Task>(it)
         }
-        else {
-            null
+        val currentCategory = intent.getStringExtra(categoryKey)?.let {
+            Json.decodeFromString<Category>(it)
         }
 
         setContent {
@@ -35,7 +34,7 @@ class TaskActivity: ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    TaskFullCard(currentTask)
+                    TaskFullCard(currentTask, currentCategory)
                 }
             }
         }

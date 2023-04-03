@@ -32,6 +32,7 @@ import com.example.mytodoapp.viewmodels.TaskViewModel
 @Composable
 fun TaskFullCard(
     currentTask: Task?,
+    currentCategory: Category?,
     categoryViewModel: CategoryViewModel = CategoryViewModel(LocalContext.current),
     taskViewModel: TaskViewModel = TaskViewModel(LocalContext.current)
 ) {
@@ -57,15 +58,7 @@ fun TaskFullCard(
         mutableStateOf(false)
     }
     var selectedCategory by remember {
-        mutableStateOf(
-            if (categories.isNotEmpty()) {
-                if (currentTask == null) categories[0] else
-                    categories.find { it.uId == currentTask.category }!!
-            }
-            else {
-                Category()
-            }
-        )
+        mutableStateOf(currentCategory ?: Category())
     }
 
     val scrollState = rememberScrollState()
@@ -278,6 +271,9 @@ fun TaskFullCard(
                                 ))
                             }
                             else {
+                                currentTask.title = headerText.text
+                                currentTask.data = dataText.text
+                                currentTask.category = selectedCategory.uId
                                 taskViewModel.update(currentTask)
                             }
 
@@ -287,7 +283,12 @@ fun TaskFullCard(
                     }) {
 
                     Text(
-                        text = stringResource(id = R.string.add_text).uppercase(),
+                        text = stringResource(
+                            id = if (currentTask == null)
+                                    R.string.add_text
+                                 else
+                                    R.string.edit_text
+                        ).uppercase(),
                         color = SecondaryDark,
                         style = MaterialTheme.typography.subtitle2,
                         textAlign = TextAlign.Center,

@@ -7,12 +7,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -21,7 +21,10 @@ import com.example.mytodoapp.constants.IntentKeys
 import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.services.ColorConverter
+import com.example.mytodoapp.ui.theme.PrimaryLight
 import com.example.mytodoapp.ui.theme.Shapes
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 
 @Composable
 fun TaskShortCard(
@@ -39,13 +42,17 @@ fun TaskShortCard(
             .fillMaxWidth()
             .clickable(
                 onClick = {
+                    val jsonTask = Json.encodeToString(task)
+                    val jsonCategory = Json.encodeToString(foundCategory)
+
                     val intent = Intent(context, TaskActivity::class.java)
-                    intent.putExtra(IntentKeys.CURRENT_TASK.stringValue, task)
+                    intent.putExtra(IntentKeys.CURRENT_TASK.stringValue, jsonTask)
+                    intent.putExtra(IntentKeys.CURRENT_CATEGORY.stringValue, jsonCategory)
 
                     context.startActivity(intent)
                 }
             )
-            .padding(10.dp)
+            .padding(5.dp, 10.dp)
             .border(
                 border = BorderStroke(
                     width = 1.dp,
@@ -53,28 +60,22 @@ fun TaskShortCard(
                 )
             )
             .background(
-                color = MaterialTheme.colors.primaryVariant,
+                brush = Brush.horizontalGradient(
+                    0f to Color(red, green, blue, alpha),
+                    2F to MaterialTheme.colors.primary
+                ),
                 shape = Shapes.medium
             )
+            .padding(30.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .weight(1F)
-                .background(
-                    color = Color(red, green, blue, alpha),
-                    shape = RoundedCornerShape(10.dp, 0.dp, 0.dp, 10.dp)
-                )
-        )
-
         Text(
             text = task.title,
             modifier = Modifier
-                .weight(2F)
-                .padding(5.dp)
-                .background(MaterialTheme.colors.primaryVariant),
-            color = MaterialTheme.colors.secondary,
-            style = MaterialTheme.typography.body1,
-            textAlign = TextAlign.Center
+                .fillMaxWidth()
+                .padding(5.dp),
+            color = PrimaryLight,
+            style = MaterialTheme.typography.subtitle1,
+            textAlign = TextAlign.Left
         )
     }
 }
