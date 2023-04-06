@@ -5,7 +5,7 @@ import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.entities.db.dao.TasksDao
 
 class TasksRepository(private val tasksDao: TasksDao) {
-    val tasks: LiveData<List<Task>> = tasksDao.getTasks()
+    var tasks: LiveData<List<Task>> = tasksDao.getTasks()
 
     suspend fun add(task: Task) {
         tasksDao.addTask(task)

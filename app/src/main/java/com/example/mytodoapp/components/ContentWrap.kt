@@ -46,10 +46,15 @@ fun ContentWrap(
         snackbarHostState = SnackbarHostState()
     )
 
+    val currentCategory = remember {
+        mutableStateOf(-1L)
+    }
+
     val headerText by contentViewModel.topAppBarHeader.observeAsState("")
     val isFabActive by contentViewModel.isFabActive.observeAsState(false)
     val isDialogOpen by contentViewModel.isDialogOpen.observeAsState(false)
     val isSnackBarActive by contentViewModel.isSnackBarActive.observeAsState(false)
+    val isDeleteActive by contentViewModel.isDeleteActive.observeAsState(false)
     val categories by categoryViewModel.categories.observeAsState(listOf())
     val tasks by taskViewModel.tasks.observeAsState(listOf())
 
@@ -58,6 +63,7 @@ fun ContentWrap(
     AppContext.apply {
         this.contentViewModel = contentViewModel
         this.categoryViewModel = categoryViewModel
+        this.taskViewModel = taskViewModel
         this.sheetState = rememberModalBottomSheetState(
             initialValue = ModalBottomSheetValue.Hidden,
             confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
@@ -88,8 +94,8 @@ fun ContentWrap(
         Scaffold(
             scaffoldState = scaffoldState,
             floatingActionButton = {
-                if (isFabActive) {
-                    AddButton(hasCaption = false)
+                if (isFabActive && categories.isNotEmpty()) {
+                    AddButton(isDeleteActive = isDeleteActive, hasCaption = false)
                 }
             },
             floatingActionButtonPosition = FabPosition.End,
@@ -144,7 +150,7 @@ fun ContentWrap(
                 modifier = Modifier
                     .padding(it)
             ) {
-                PageView(navController, categories, tasks)
+                PageView(navController, categories, tasks, isDeleteActive, currentCategory)
                 if (isDialogOpen) {
                     val dialogData = when (AppContext.currentRoute) {
                         Routes.TASKS.stringValue ->
@@ -155,7 +161,7 @@ fun ContentWrap(
                                 stringResource(id = R.string.delete_categories_caption)
                     }
 
-                    AlertMessageDialog(dialogData)
+                    AlertMessageDialog(dialogData, isDeleteActive)
                 }
             }
         }

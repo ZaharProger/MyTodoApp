@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,7 +17,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.mytodoapp.R
+import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.services.ColorConverter
@@ -25,8 +28,10 @@ import com.example.mytodoapp.ui.theme.Shapes
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryFullCard(
+    navController: NavHostController,
     category: Category,
-    colorConverter: ColorConverter
+    colorConverter: ColorConverter,
+    currentCategory: MutableState<Long>
 ) {
 
     val (red, green, blue, alpha) = colorConverter.getRgba(category.color)
@@ -41,7 +46,10 @@ fun CategoryFullCard(
                     AppContext.contentViewModel?.setDialogState(true)
                     AppContext.selectedItems = mutableListOf(category)
                 },
-                onClick = {}
+                onClick = {
+                    currentCategory.value = category.uId
+                    navController.navigate(Routes.TASKS.stringValue)
+                }
             )
             .background(
                 color = MaterialTheme.colors.primaryVariant,

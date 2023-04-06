@@ -15,11 +15,14 @@ import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.R
 import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
+import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.ui.theme.Shapes
 
 @Composable
 fun AlertMessageDialog(
-    dialogData: Pair<String, String>) {
+    dialogData: Pair<String, String>,
+    isDeleteActive: Boolean
+) {
 
     AlertDialog(
         backgroundColor = MaterialTheme.colors.primary,
@@ -67,10 +70,19 @@ fun AlertMessageDialog(
                     elevation = null,
                     border = null,
                     onClick = {
-                        AppContext.categoryViewModel
-                            ?.remove(AppContext.selectedItems[0] as Category)
+                        AppContext.selectedItems.forEach { item ->
+                            if (isDeleteActive) {
+                                AppContext.taskViewModel?.remove(item as Task)
+                            }
+                            else {
+                                AppContext.categoryViewModel?.remove(item as Category)
+                            }
+                        }
+
+                        AppContext.selectedItems.clear()
                         AppContext.contentViewModel?.setDialogState(false)
                         AppContext.contentViewModel?.setSnackBarState(true)
+                        AppContext.contentViewModel?.setDeleteState(false)
                     }
                 ) {
                     Text(
@@ -98,6 +110,9 @@ fun AlertMessageDialog(
                     elevation = null,
                     border = null,
                     onClick = {
+                        if (!isDeleteActive) {
+                            AppContext.selectedItems.clear()
+                        }
                         AppContext.contentViewModel?.setDialogState(false)
                     }
                 ) {

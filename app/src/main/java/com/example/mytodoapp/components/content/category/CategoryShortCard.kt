@@ -8,6 +8,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -20,7 +21,8 @@ import com.example.mytodoapp.ui.theme.Shapes
 @Composable
 fun CategoryShortCard(
     category: Category,
-    colorConverter: ColorConverter
+    colorConverter: ColorConverter,
+    currentCategory: MutableState<Long>
 ) {
 
     val (red, green, blue, alpha) = colorConverter.getRgba(category.color)
@@ -33,7 +35,10 @@ fun CategoryShortCard(
         colors = ButtonDefaults.buttonColors(
             backgroundColor = cardColor
         ),
-        onClick = { /*TODO*/ }
+        onClick = {
+            currentCategory.value = if (currentCategory.value == category.uId) -1L
+                else category.uId
+        }
     ) {
         Text(
             text = category.name,

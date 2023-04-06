@@ -8,20 +8,18 @@ import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.db.BaseEntity
 import com.example.mytodoapp.viewmodels.CategoryViewModel
 import com.example.mytodoapp.viewmodels.ContentViewModel
+import com.example.mytodoapp.viewmodels.TaskViewModel
 
 object AppContext {
     var contentViewModel: ContentViewModel? = null
     var categoryViewModel: CategoryViewModel? = null
+    var taskViewModel: TaskViewModel? = null
+
     @OptIn(ExperimentalMaterialApi::class)
     lateinit var sheetState: ModalBottomSheetState
     lateinit var categoriesListState: LazyGridState
     lateinit var tasksListState: LazyListState
+
     var currentRoute: String = Routes.TASKS.stringValue
-    private var _selectedItems = mutableListOf<BaseEntity>()
-    var selectedItems: MutableList<BaseEntity>
-        get() = _selectedItems
-        set(value) {
-            _selectedItems.clear()
-            _selectedItems.addAll(value)
-        }
+    var selectedItems = mutableListOf<BaseEntity>()
 }

@@ -15,4 +15,5 @@ val ListItemDark = Color(0xFF505050)
 val PlaceholderDark = Color(0x60A1A1A1)
 
 val Error = Color(0xFFFF0000)
+val DeleteBackground = Color(0x90FF5A5A)
 val Scrim = Color(0x50000000)

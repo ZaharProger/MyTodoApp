@@ -25,12 +25,14 @@ import com.example.mytodoapp.R
 import com.example.mytodoapp.activities.TaskActivity
 import com.example.mytodoapp.constants.Routes
 import com.example.mytodoapp.entities.AppContext
+import com.example.mytodoapp.ui.theme.Error
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddButton(
+    isDeleteActive: Boolean = false,
     isFabActive: Boolean = true,
     hasCaption: Boolean = true
 ) {
@@ -52,22 +54,27 @@ fun AddButton(
         IconButton(
             modifier = Modifier
                 .clip(CircleShape)
-                .background(SecondaryLight)
+                .background(if (isDeleteActive) Error else SecondaryLight)
                 .padding(5.dp),
             onClick = {
                 coroutineScope.launch {
-                    when (AppContext.currentRoute) {
-                        Routes.CATEGORIES.stringValue -> AppContext.sheetState.show()
-                        Routes.TASKS.stringValue -> {
-                            val intent = Intent(context, TaskActivity::class.java)
-                            context.startActivity(intent)
+                    if (isDeleteActive) {
+                        AppContext.contentViewModel?.setDialogState(true)
+                    }
+                    else {
+                        when (AppContext.currentRoute) {
+                            Routes.CATEGORIES.stringValue -> AppContext.sheetState.show()
+                            Routes.TASKS.stringValue -> {
+                                val intent = Intent(context, TaskActivity::class.java)
+                                context.startActivity(intent)
+                            }
                         }
                     }
                 }
             }) {
             Image(
                 imageVector = ImageVector.vectorResource(
-                    id = R.drawable.ic_add
+                    id = if (isDeleteActive) R.drawable.ic_remove else R.drawable.ic_add
                 ),
                 contentDescription = "",
                 alignment = Alignment.Center

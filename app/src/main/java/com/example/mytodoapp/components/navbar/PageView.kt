@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,7 +21,9 @@ import com.example.mytodoapp.entities.db.Task
 fun PageView(
     navController: NavHostController,
     categories: List<Category>,
-    tasks: List<Task>
+    tasks: List<Task>,
+    isDeleteActive: Boolean,
+    currentCategory: MutableState<Long>
 ) {
 
     Column(
@@ -34,10 +37,10 @@ fun PageView(
             startDestination = Routes.TASKS.stringValue
         ) {
             composable(Routes.TASKS.stringValue) {
-                TasksPage(tasks, categories)
+                TasksPage(tasks, categories, isDeleteActive, currentCategory)
             }
             composable(Routes.CATEGORIES.stringValue) {
-                CategoriesPage(categories)
+                CategoriesPage(navController, categories, currentCategory)
             }
         }
     }

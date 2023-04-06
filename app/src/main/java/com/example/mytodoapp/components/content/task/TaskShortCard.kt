@@ -2,14 +2,11 @@ package com.example.mytodoapp.components.content.task
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -18,45 +15,83 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mytodoapp.activities.TaskActivity
 import com.example.mytodoapp.constants.IntentKeys
+import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.services.ColorConverter
+import com.example.mytodoapp.ui.theme.DeleteBackground
 import com.example.mytodoapp.ui.theme.PrimaryLight
 import com.example.mytodoapp.ui.theme.Shapes
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskShortCard(
     task: Task,
+    isDeleteActive: Boolean,
     colorConverter: ColorConverter,
     categories: List<Category>,
     context: Context
 ) {
     val foundCategory = categories.find { it.uId == task.category }
-    val (red, green, blue, alpha) = colorConverter.getRgba(foundCategory!!.color)
+    val (red, green, blue, alpha) = colorConverter.getRgba(
+        foundCategory?.color ?: "00FFFFFF")
+
+
+    var inSelectedItems by remember {
+        mutableStateOf(AppContext.selectedItems.contains(task))
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(
+            .combinedClickable (
+                onLongClick = {
+                    if (!inSelectedItems) {
+                        AppContext.contentViewModel?.setDeleteState(true)
+                        AppContext.selectedItems.add(task)
+                        inSelectedItems = true
+                    }
+                },
                 onClick = {
-                    val jsonTask = Json.encodeToString(task)
-                    val jsonCategory = Json.encodeToString(foundCategory)
+                    if (isDeleteActive) {
+                        if (inSelectedItems) {
+                            AppContext.selectedItems.remove(task)
+                            inSelectedItems = false
 
-                    val intent = Intent(context, TaskActivity::class.java)
-                    intent.putExtra(IntentKeys.CURRENT_TASK.stringValue, jsonTask)
-                    intent.putExtra(IntentKeys.CURRENT_CATEGORY.stringValue, jsonCategory)
+                            if (AppContext.selectedItems.size == 0) {
+                                AppContext.contentViewModel?.setDeleteState(false)
+                            }
+                        }
+                        else {
+                            AppContext.selectedItems.add(task)
+                            inSelectedItems = true
+                        }
+                    }
+                    else {
+                        val jsonTask = Json.encodeToString(task)
+                        val jsonCategory = Json.encodeToString(foundCategory)
 
-                    context.startActivity(intent)
+                        val intent = Intent(context, TaskActivity::class.java)
+                        intent.putExtra(IntentKeys.CURRENT_TASK.stringValue, jsonTask)
+                        intent.putExtra(IntentKeys.CURRENT_CATEGORY.stringValue, jsonCategory)
+
+                        context.startActivity(intent)
+                    }
                 }
             )
-            .padding(5.dp, 10.dp)
+            .padding(0.dp)
+            .background(
+                color = if (inSelectedItems)
+                    DeleteBackground else MaterialTheme.colors.primary
+            )
+            .padding(5.dp)
             .border(
                 border = BorderStroke(
                     width = 1.dp,
-                    color = MaterialTheme.colors.primary
+                    color = Color.Transparent
                 )
             )
             .background(

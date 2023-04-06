@@ -21,6 +21,10 @@ class ContentViewModel : ViewModel() {
     val isSnackBarActive: LiveData<Boolean>
         get() = _isSnackBarActive
 
+    private var _isDeleteActive: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isDeleteActive: LiveData<Boolean>
+        get() = _isDeleteActive
+
     fun setTopAppBarHeader(headerText: String) {
         _topAppBarHeader.value = headerText
     }
@@ -35,5 +39,9 @@ class ContentViewModel : ViewModel() {
 
     fun setSnackBarState(snackBarState: Boolean) {
         _isSnackBarActive.value = snackBarState
+    }
+
+    fun setDeleteState(deleteState: Boolean) {
+        _isDeleteActive.value = deleteState
     }
 }

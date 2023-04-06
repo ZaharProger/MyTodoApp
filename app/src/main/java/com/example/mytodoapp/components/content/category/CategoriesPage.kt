@@ -6,10 +6,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.mytodoapp.R
 import com.example.mytodoapp.components.content.AddButton
 import com.example.mytodoapp.entities.AppContext
@@ -17,7 +19,11 @@ import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.services.ColorConverter
 
 @Composable
-fun CategoriesPage(categories: List<Category>) {
+fun CategoriesPage(
+    navController: NavHostController,
+    categories: List<Category>,
+    currentCategory: MutableState<Long>
+) {
     AppContext.contentViewModel?.setTopAppBarHeader(
         stringResource(
             id = R.string.categories_caption
@@ -51,7 +57,12 @@ fun CategoriesPage(categories: List<Category>) {
                     AddButton(isFabActive = false)
                 }
                 else {
-                    CategoryFullCard(categories[it], colorConverter)
+                    CategoryFullCard(
+                        navController,
+                        categories[it],
+                        colorConverter,
+                        currentCategory
+                    )
                 }
             }
         }
