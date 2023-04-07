@@ -1,5 +1,6 @@
 package com.example.mytodoapp.components.content.category
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,6 +19,7 @@ import com.example.mytodoapp.entities.AppContext
 import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.services.ColorConverter
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoriesPage(
     navController: NavHostController,
@@ -54,10 +56,14 @@ fun CategoriesPage(
                     }
                 }) {
                 if (it == categories.size) {
-                    AddButton(isFabActive = false)
+                    AddButton(
+                        Modifier.animateItemPlacement(),
+                        isFabActive = false
+                    )
                 }
                 else {
                     CategoryFullCard(
+                        Modifier.animateItemPlacement(),
                         navController,
                         categories[it],
                         colorConverter,
@@ -72,7 +78,10 @@ fun CategoriesPage(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AddButton(isFabActive = false)
+            AddButton(
+                null,
+                isFabActive = false,
+            )
         }
     }
 }

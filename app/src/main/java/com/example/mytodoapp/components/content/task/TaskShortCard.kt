@@ -28,6 +28,7 @@ import kotlinx.serialization.encodeToString
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskShortCard(
+    modifier: Modifier,
     task: Task,
     isDeleteActive: Boolean,
     colorConverter: ColorConverter,
@@ -45,7 +46,7 @@ fun TaskShortCard(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .combinedClickable (
                 onLongClick = {

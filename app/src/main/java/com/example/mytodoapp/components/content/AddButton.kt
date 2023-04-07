@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddButton(
+    modifier: Modifier?,
     isDeleteActive: Boolean = false,
     isFabActive: Boolean = true,
     hasCaption: Boolean = true
@@ -39,8 +40,8 @@ fun AddButton(
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-    var buttonModifier = Modifier
-        .background(Color.Transparent)
+    var buttonModifier = modifier?.background(Color.Transparent) ?:
+        Modifier.background(Color.Transparent)
 
     if (!isFabActive) {
         buttonModifier = buttonModifier.fillMaxSize()

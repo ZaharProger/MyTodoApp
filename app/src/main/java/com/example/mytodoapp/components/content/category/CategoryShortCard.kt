@@ -20,6 +20,7 @@ import com.example.mytodoapp.ui.theme.Shapes
 
 @Composable
 fun CategoryShortCard(
+    modifier: Modifier,
     category: Category,
     colorConverter: ColorConverter,
     currentCategory: MutableState<Long>
@@ -29,7 +30,7 @@ fun CategoryShortCard(
     val cardColor = Color(red, green, blue, alpha)
 
     Button(
-        modifier = Modifier
+        modifier = modifier
             .padding(5.dp, 3.dp),
         shape = Shapes.large,
         colors = ButtonDefaults.buttonColors(

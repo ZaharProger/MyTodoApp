@@ -1,5 +1,6 @@
 package com.example.mytodoapp.components.content.task
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.services.ColorConverter
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TasksPage(
     tasks: List<Task>,
@@ -71,7 +73,12 @@ fun TasksPage(
             verticalAlignment = Alignment.CenterVertically
         ) {
             items(filteredCategories, key = { "category_${it.uId}" }) {
-                CategoryShortCard(it, colorConverter, currentCategory)
+                CategoryShortCard(
+                    Modifier.animateItemPlacement(),
+                    it,
+                    colorConverter,
+                    currentCategory
+                )
             }
         }
 
@@ -86,6 +93,7 @@ fun TasksPage(
             ) {
                 items(filteredTasks, key = { "task_${it.uId}" }) {
                     TaskShortCard(
+                        Modifier.animateItemPlacement(),
                         it,
                         isDeleteActive,
                         colorConverter,

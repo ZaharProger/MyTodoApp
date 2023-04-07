@@ -95,7 +95,11 @@ fun ContentWrap(
             scaffoldState = scaffoldState,
             floatingActionButton = {
                 if (isFabActive && categories.isNotEmpty()) {
-                    AddButton(isDeleteActive = isDeleteActive, hasCaption = false)
+                    AddButton(
+                        null,
+                        isDeleteActive = isDeleteActive,
+                        hasCaption = false
+                    )
                 }
             },
             floatingActionButtonPosition = FabPosition.End,

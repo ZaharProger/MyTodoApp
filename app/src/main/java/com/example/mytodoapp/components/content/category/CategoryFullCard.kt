@@ -28,6 +28,7 @@ import com.example.mytodoapp.ui.theme.Shapes
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryFullCard(
+    modifier: Modifier,
     navController: NavHostController,
     category: Category,
     colorConverter: ColorConverter,
@@ -40,7 +41,7 @@ fun CategoryFullCard(
     Column(
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier
+        modifier = modifier
             .combinedClickable(
                 onLongClick = {
                     AppContext.contentViewModel?.setDialogState(true)
