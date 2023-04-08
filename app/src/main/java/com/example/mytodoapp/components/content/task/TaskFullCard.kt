@@ -1,6 +1,10 @@
 package com.example.mytodoapp.components.content.task
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -22,11 +26,12 @@ import com.example.mytodoapp.constants.FieldTypes
 import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.entities.ui.ValidationCase
-import com.example.mytodoapp.services.ColorConverter
-import com.example.mytodoapp.services.Validator
+import com.example.mytodoapp.services.*
 import com.example.mytodoapp.ui.theme.*
 import com.example.mytodoapp.viewmodels.CategoryViewModel
 import com.example.mytodoapp.viewmodels.TaskViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -36,6 +41,7 @@ fun TaskFullCard(
     categoryViewModel: CategoryViewModel = CategoryViewModel(LocalContext.current),
     taskViewModel: TaskViewModel = TaskViewModel(LocalContext.current)
 ) {
+    val notificationPlaceholder = stringResource(id = R.string.notification_placeholder)
     val colorConverter = ColorConverter(16)
     val categories by categoryViewModel.categories.observeAsState(listOf())
 
@@ -45,12 +51,19 @@ fun TaskFullCard(
     var dataText by remember {
         mutableStateOf(TextFieldValue(currentTask?.data ?: ""))
     }
+    var notificationDateTime by remember {
+        mutableStateOf(notificationPlaceholder)
+    }
+    var allowNotification by remember {
+        mutableStateOf(false)
+    }
     var correctFields by remember {
         mutableStateOf(
             mapOf(
                 FieldTypes.TASK_HEADER to true,
                 FieldTypes.TASK_CATEGORY to true,
-                FieldTypes.TASK_DATA to true
+                FieldTypes.TASK_DATA to true,
+                FieldTypes.TASK_NOTIFICATION to true
             )
         )
     }
@@ -219,7 +232,7 @@ fun TaskFullCard(
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(0.dp, 0.dp, 0.dp, 10.dp),
+                        .padding(0.dp, 0.dp, 0.dp, 15.dp),
                     value = dataText,
                     onValueChange = {
                         dataText = it
@@ -238,9 +251,130 @@ fun TaskFullCard(
                     }
                 )
 
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 0.dp, 0.dp, 10.dp)
+                ) {
+                    Checkbox(
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colors.secondary,
+                                shape = Shapes.small
+                            ),
+                        checked = allowNotification,
+                        onCheckedChange = {
+                            allowNotification = it
+                        },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colors.primary,
+                            uncheckedColor = MaterialTheme.colors.primary,
+                            checkmarkColor = MaterialTheme.colors.secondary
+                        )
+                    )
+
+                    Text(
+                        text = stringResource(
+                            id = R.string.notification_label
+                        ),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(5.dp, 0.dp, 0.dp, 0.dp)
+                            .background(MaterialTheme.colors.primary),
+                        color = MaterialTheme.colors.secondary,
+                        style = MaterialTheme.typography.body2,
+                        textAlign = TextAlign.Left
+                    )
+                }
+
+                OutlinedButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 0.dp, 0.dp, 20.dp),
+                    enabled = allowNotification,
+                    contentPadding = PaddingValues(5.dp),
+                    shape = Shapes.small,
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = if (allowNotification) MaterialTheme.colors.secondary
+                            else MaterialTheme.colors.onSecondary
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        backgroundColor = MaterialTheme.colors.primary
+                    ),
+                    onClick = {
+                        val dateTimeConverter = DateTimeConverter()
+                        val (currentDay, currentMonth, currentYear, currentHour, currentMinute)
+                                = dateTimeConverter.getCurrentDateTime()
+
+                        val datePicker = DatePickerDialog(
+                            context,
+                            { _: DatePicker, year: Int, month: Int, day: Int ->
+                                val date = arrayOf(day, month + 1, year)
+                                notificationDateTime = dateTimeConverter
+                                    .convertToString(date, ".")
+
+                                val timePicker = TimePickerDialog(
+                                    context,
+                                    { _: TimePicker, hour: Int, minute: Int ->
+                                        val time = arrayOf(hour, minute)
+                                        notificationDateTime = "$notificationDateTime " +
+                                            dateTimeConverter.convertToString(time, ":")
+                                    },
+                                    currentHour,
+                                    currentMinute,
+                                    true
+                                )
+
+                                timePicker.apply {
+                                    this.setOnCancelListener {
+                                        notificationDateTime = notificationPlaceholder
+                                    }
+                                }
+                                timePicker.show()
+                            },
+                            currentYear,
+                            currentMonth,
+                            currentDay
+                        )
+
+                        datePicker.apply {
+                            this.datePicker.minDate = dateTimeConverter.calendar.timeInMillis
+                            this.setOnCancelListener {
+                                notificationDateTime = notificationPlaceholder
+                            }
+                        }
+                        datePicker.show()
+                    }
+                ) {
+                    Text(
+                        text = notificationDateTime,
+                        color = if (correctFields[FieldTypes.TASK_NOTIFICATION] == false) {
+                            if (allowNotification)
+                                Error
+                            else
+                                MaterialTheme.colors.onSecondary
+                        }
+                        else {
+                            if (notificationDateTime == notificationPlaceholder || !allowNotification)
+                                MaterialTheme.colors.onSecondary
+                            else
+                                MaterialTheme.colors.secondary
+                        },
+                        style = MaterialTheme.typography.subtitle2,
+                        textAlign = TextAlign.Center,
+                        letterSpacing = TextUnit(
+                            value = 1F,
+                            TextUnitType.Sp
+                        )
+                    )
+                }
+
                 Button(
                     modifier = Modifier
-                        .padding(10.dp, 0.dp)
                         .fillMaxWidth()
                         .padding(15.dp, 10.dp),
                     contentPadding = PaddingValues(5.dp, 15.dp),
@@ -250,31 +384,57 @@ fun TaskFullCard(
                     ),
                     onClick = {
                         val pattern = "[\\s]*"
-                        val validationResult = Validator.validate(
-                            mapOf(
-                                FieldTypes.TASK_HEADER to
-                                        ValidationCase(headerText.text, pattern),
-                                FieldTypes.TASK_DATA to
-                                        ValidationCase(dataText.text, pattern),
-                                FieldTypes.TASK_CATEGORY to
-                                        ValidationCase(selectedCategory.name, pattern)
-                            )
+                        val validationCases = mutableMapOf(
+                            FieldTypes.TASK_HEADER to
+                                    ValidationCase(headerText.text, pattern),
+                            FieldTypes.TASK_DATA to
+                                    ValidationCase(dataText.text, pattern),
+                            FieldTypes.TASK_CATEGORY to
+                                    ValidationCase(selectedCategory.name, pattern),
                         )
+                        if (allowNotification) {
+                            validationCases[FieldTypes.TASK_NOTIFICATION] = ValidationCase(
+                                if (notificationDateTime == notificationPlaceholder)
+                                    ""
+                                else
+                                    notificationDateTime,
+                                pattern
+                            )
+                        }
+
+                        val validationResult = Validator.validate(validationCases)
 
                         correctFields = validationResult
                         if (!correctFields.containsValue(false)) {
                             if (currentTask == null) {
                                 taskViewModel.add(Task(
-                                    title = headerText.text,
-                                    data = dataText.text,
+                                    title = headerText.text.trim(),
+                                    data = dataText.text.trim(),
                                     category = selectedCategory.uId
                                 ))
                             }
                             else {
-                                currentTask.title = headerText.text
-                                currentTask.data = dataText.text
+                                currentTask.title = headerText.text.trim()
+                                currentTask.data = dataText.text.trim()
                                 currentTask.category = selectedCategory.uId
                                 taskViewModel.update(currentTask)
+                            }
+
+                            if (allowNotification) {
+                                val fireTime = SimpleDateFormat(
+                                    "dd.MM.yyyy HH:mm",
+                                    Locale.ROOT
+                                ).parse(notificationDateTime)!!.time
+
+                                val alarm = Alarm(context)
+                                alarm.set(
+                                    currentTask ?: Task(
+                                        title = headerText.text.trim(),
+                                        data = dataText.text.trim(),
+                                        category = selectedCategory.uId
+                                    ),
+                                    fireTime
+                                )
                             }
 
                             val intent = Intent(context, MainActivity::class.java)
@@ -298,6 +458,7 @@ fun TaskFullCard(
                         )
                     )
                 }
+
             }
         }
     }

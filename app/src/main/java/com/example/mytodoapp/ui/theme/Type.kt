@@ -32,7 +32,7 @@ val Typography = Typography(
     ),
     caption = TextStyle(
         fontWeight = FontWeight.Light,
-        fontSize = 12.sp,
+        fontSize = 10.sp,
         fontFamily = FontFamily(Font(R.font.open_sans_light)),
     ),
     h1 = TextStyle(

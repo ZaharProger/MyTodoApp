@@ -5,6 +5,8 @@
     <string name="add_category">Добавить категорию</string>
     <string name="name_placeholder">Название</string>
     <string name="task_data_placeholder">Описание задачи</string>
+    <string name="notification_label">Установить напоминание</string>
+    <string name="notification_placeholder">Дата и время напоминания</string>
     <string name="add_text">Добавить</string>
     <string name="edit_text">Изменить</string>
     <string name="yes_button">Да</string>

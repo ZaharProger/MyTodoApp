@@ -75,9 +75,10 @@ fun TaskShortCard(
                         val jsonTask = Json.encodeToString(task)
                         val jsonCategory = Json.encodeToString(foundCategory)
 
-                        val intent = Intent(context, TaskActivity::class.java)
-                        intent.putExtra(IntentKeys.CURRENT_TASK.stringValue, jsonTask)
-                        intent.putExtra(IntentKeys.CURRENT_CATEGORY.stringValue, jsonCategory)
+                        val intent = Intent(context, TaskActivity::class.java).apply {
+                            putExtra(IntentKeys.CURRENT_TASK.stringValue, jsonTask)
+                            putExtra(IntentKeys.CURRENT_CATEGORY.stringValue, jsonCategory)
+                        }
 
                         context.startActivity(intent)
                     }
