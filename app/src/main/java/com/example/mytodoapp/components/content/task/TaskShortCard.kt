@@ -97,7 +97,7 @@ fun TaskShortCard(
             )
             .background(
                 brush = Brush.horizontalGradient(
-                    0f to Color(red, green, blue, alpha),
+                    0F to Color(red, green, blue, alpha),
                     2F to MaterialTheme.colors.primary
                 ),
                 shape = Shapes.medium

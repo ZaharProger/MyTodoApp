@@ -1,5 +1,6 @@
 package com.example.mytodoapp.components.content.notification
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -8,18 +9,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,11 +28,13 @@ import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.services.Alarm
 import com.example.mytodoapp.services.ColorConverter
+import com.example.mytodoapp.ui.theme.PrimaryLight
 import com.example.mytodoapp.ui.theme.SecondaryDark
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import com.example.mytodoapp.ui.theme.Shapes
 import com.example.mytodoapp.viewmodels.TaskViewModel
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NotificationCard(
     currentTask: Task?,
@@ -74,66 +72,17 @@ fun NotificationCard(
         context.startActivity(intent)
     }
 
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    0F to MaterialTheme.colors.primary,
-                    10F to Color(red, green, blue, alpha)
-                ),
-                shape = RectangleShape
-            )
-            .padding(10.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(scrollState)
-                .weight(
-                    weight = 1F,
-                    fill = false
-                )
-        ) {
-            Text(
-                text = currentTask?.title ?: "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 0.dp, 5.dp),
-                color = MaterialTheme.colors.secondary,
-                style = MaterialTheme.typography.h1,
-                textAlign = TextAlign.Center
-            )
-
-            Text(
-                text = "Из категории ${currentCategory?.name ?: ""}",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 0.dp, 20.dp),
-                color = MaterialTheme.colors.secondary,
-                style = MaterialTheme.typography.caption,
-                textAlign = TextAlign.Center
-            )
-
-            Text(
-                text = currentTask?.data ?: "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 0.dp, 10.dp),
-                color = MaterialTheme.colors.secondary,
-                style = MaterialTheme.typography.body2,
-                textAlign = TextAlign.Center
-            )
-
+            .fillMaxSize(),
+        backgroundColor = MaterialTheme.colors.primary,
+        bottomBar = {
             Row(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 10.dp)
+                    .padding(5.dp, 10.dp)
             ) {
                 Button(
                     modifier = Modifier
@@ -210,6 +159,60 @@ fun NotificationCard(
                 }
             }
         }
-    }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.primary)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState)
+                    .padding(0.dp, 0.dp, 0.dp, 70.dp)
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(red, green, blue, alpha))
+                        .padding(0.dp, 0.dp, 0.dp, 20.dp)
+                ) {
+                    Text(
+                        text = currentTask?.title ?: "",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp, 0.dp, 0.dp, 5.dp),
+                        color = PrimaryLight,
+                        style = MaterialTheme.typography.h1,
+                        textAlign = TextAlign.Center
+                    )
 
+                    Text(
+                        text = "Из категории ${currentCategory?.name ?: ""}",
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        color = PrimaryLight,
+                        style = MaterialTheme.typography.caption,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Text(
+                    text = currentTask?.data ?: "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp, 0.dp),
+                    color = MaterialTheme.colors.secondary,
+                    style = MaterialTheme.typography.body2,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
 }
