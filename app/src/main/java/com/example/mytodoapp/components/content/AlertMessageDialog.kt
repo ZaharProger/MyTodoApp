@@ -81,7 +81,6 @@ fun AlertMessageDialog(
 
                         AppContext.selectedItems.clear()
                         AppContext.contentViewModel?.setDialogState(false)
-                        AppContext.contentViewModel?.setSnackBarState(true)
                         AppContext.contentViewModel?.setDeleteState(false)
                     }
                 ) {

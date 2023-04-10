@@ -8,6 +8,8 @@
     <string name="notification_label">Установить напоминание</string>
     <string name="notification_placeholder">Дата и время напоминания</string>
     <string name="add_text">Добавить</string>
+    <string name="finish_text">Завершить</string>
+    <string name="notify_text">Напомнить позже</string>
     <string name="edit_text">Изменить</string>
     <string name="yes_button">Да</string>
     <string name="no_button">Нет</string>

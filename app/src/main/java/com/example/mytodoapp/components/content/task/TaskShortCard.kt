@@ -39,7 +39,6 @@ fun TaskShortCard(
     val (red, green, blue, alpha) = colorConverter.getRgba(
         foundCategory?.color ?: "00FFFFFF")
 
-
     var inSelectedItems by remember {
         mutableStateOf(AppContext.selectedItems.contains(task))
     }

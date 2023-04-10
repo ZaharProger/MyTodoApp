@@ -17,10 +17,6 @@ class ContentViewModel : ViewModel() {
     val isDialogOpen: LiveData<Boolean>
         get() = _isDialogOpen
 
-    private var _isSnackBarActive: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isSnackBarActive: LiveData<Boolean>
-        get() = _isSnackBarActive
-
     private var _isDeleteActive: MutableLiveData<Boolean> = MutableLiveData(false)
     val isDeleteActive: LiveData<Boolean>
         get() = _isDeleteActive
@@ -35,10 +31,6 @@ class ContentViewModel : ViewModel() {
 
     fun setDialogState(dialogState: Boolean) {
         _isDialogOpen.value = dialogState
-    }
-
-    fun setSnackBarState(snackBarState: Boolean) {
-        _isSnackBarActive.value = snackBarState
     }
 
     fun setDeleteState(deleteState: Boolean) {

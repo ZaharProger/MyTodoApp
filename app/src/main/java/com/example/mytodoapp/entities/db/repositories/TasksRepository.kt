@@ -8,7 +8,7 @@ class TasksRepository(private val tasksDao: TasksDao) {
     var tasks: LiveData<List<Task>> = tasksDao.getTasks()
 
     suspend fun add(task: Task) {
-        tasksDao.addTask(task)
+        return tasksDao.addTask(task)
     }
 
     suspend fun update(task: Task) {

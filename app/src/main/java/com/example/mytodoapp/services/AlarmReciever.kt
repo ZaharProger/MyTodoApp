@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.mytodoapp.R
 import com.example.mytodoapp.activities.NotificationActivity
 import com.example.mytodoapp.constants.IntentKeys
+import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -29,15 +30,17 @@ class AlarmReceiver : BroadcastReceiver() {
     private fun handleAlarm(context: Context?, intent: Intent) {
         context?.let {
             val channelId = createNotificationChannel(it)
-            val task = intent.getStringExtra(IntentKeys.ALARM_TASK.stringValue)?.let { data ->
-                Json.decodeFromString<Task>(data)
-            }
+            val task = intent.getStringExtra(IntentKeys.ALARM_TASK.stringValue)?.
+                let { data -> Json.decodeFromString<Task>(data) }
+            val category = intent.getStringExtra(IntentKeys.ALARM_CATEGORY.stringValue)?.
+                let { data -> Json.decodeFromString<Category>(data) }
 
-            if (task != null) {
+            if (task != null && category != null) {
                 createNotification(
                     it,
                     channelId,
                     task,
+                    category,
                     "Необходимо выполнить задачу ${task.title}!"
                 )
             }
@@ -48,11 +51,13 @@ class AlarmReceiver : BroadcastReceiver() {
         context: Context,
         id: String,
         task: Task,
+        category: Category,
         description: String
     ) {
         val intent = Intent(context, NotificationActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra(IntentKeys.CURRENT_TASK.stringValue, Json.encodeToString(task))
+            putExtra(IntentKeys.CURRENT_CATEGORY.stringValue, Json.encodeToString(category))
         }
         val pendingIntent = PendingIntent.getActivity(
             context,

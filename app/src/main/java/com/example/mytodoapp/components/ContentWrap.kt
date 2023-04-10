@@ -35,7 +35,6 @@ fun ContentWrap(
     categoryViewModel: CategoryViewModel = CategoryViewModel(LocalContext.current),
     taskViewModel: TaskViewModel = TaskViewModel(LocalContext.current)
 ) {
-
     val navController = rememberNavController()
     val navItems = listOf(
         NavBarItem(Routes.TASKS, R.string.tasks_caption, R.drawable.ic_tasks),
@@ -53,7 +52,6 @@ fun ContentWrap(
     val headerText by contentViewModel.topAppBarHeader.observeAsState("")
     val isFabActive by contentViewModel.isFabActive.observeAsState(false)
     val isDialogOpen by contentViewModel.isDialogOpen.observeAsState(false)
-    val isSnackBarActive by contentViewModel.isSnackBarActive.observeAsState(false)
     val isDeleteActive by contentViewModel.isDeleteActive.observeAsState(false)
     val categories by categoryViewModel.categories.observeAsState(listOf())
     val tasks by taskViewModel.tasks.observeAsState(listOf())
@@ -132,24 +130,6 @@ fun ContentWrap(
                 }
             }
         ) {
-            if (isSnackBarActive) {
-                val snackbarText = stringResource(id = R.string.deletion_complete)
-                LaunchedEffect(
-                    key1 = "",
-                    block = {
-                        val snackBarHandler = scaffoldState.snackbarHostState.showSnackbar(
-                            message = snackbarText,
-                            duration = SnackbarDuration.Short
-                        )
-
-                        when (snackBarHandler) {
-                            SnackbarResult.Dismissed -> contentViewModel.setSnackBarState(false)
-                            else -> {}
-                        }
-                    }
-                )
-            }
-
             Column(
                 modifier = Modifier
                     .padding(it)
