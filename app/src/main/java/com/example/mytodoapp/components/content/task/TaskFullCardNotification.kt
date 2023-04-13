@@ -31,7 +31,7 @@ fun TaskFullCardNotification(
     allowNotification: MutableState<Boolean>,
     notificationDateTime: MutableState<String>,
     notificationPlaceholder: String,
-    correctFields: MutableState<Map<FieldTypes, Boolean>>
+    correctFields: MutableState<Map<FieldTypes, Boolean>>,
 ) {
 
     Row(

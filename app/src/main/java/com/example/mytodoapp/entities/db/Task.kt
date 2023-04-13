@@ -23,5 +23,7 @@ data class Task(
     @ColumnInfo(name = "data")
     var data: String,
     @ColumnInfo(name = "category_uid", index = true)
-    var category: Long
+    var category: Long,
+    @ColumnInfo(name = "notification_datetime")
+    var notificationDateTime: Long? = null
 ): BaseEntity()

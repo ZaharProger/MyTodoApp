@@ -19,7 +19,6 @@ import com.example.mytodoapp.entities.db.Task
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.random.Random
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -29,13 +28,13 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private fun handleAlarm(context: Context?, intent: Intent) {
         context?.let {
-            val channelId = createNotificationChannel(it)
             val task = intent.getStringExtra(IntentKeys.ALARM_TASK.stringValue)?.
                 let { data -> Json.decodeFromString<Task>(data) }
             val category = intent.getStringExtra(IntentKeys.ALARM_CATEGORY.stringValue)?.
                 let { data -> Json.decodeFromString<Category>(data) }
 
             if (task != null && category != null) {
+                val channelId = createNotificationChannel(it, "${task.uId}")
                 createNotification(
                     it,
                     channelId,
@@ -61,7 +60,7 @@ class AlarmReceiver : BroadcastReceiver() {
         }
         val pendingIntent = PendingIntent.getActivity(
             context,
-            Random.nextInt(1, Int.MAX_VALUE),
+            task.uId.toInt(),
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
@@ -83,9 +82,7 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun createNotificationChannel(context: Context): String {
-        val channelId = "${Random.nextInt(1, Int.MAX_VALUE)}"
-
+    private fun createNotificationChannel(context: Context, channelId: String): String {
         val channel = NotificationChannel(
             channelId,
             "ALARM",

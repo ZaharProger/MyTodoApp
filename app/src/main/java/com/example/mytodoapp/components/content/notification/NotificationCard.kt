@@ -33,6 +33,7 @@ import com.example.mytodoapp.ui.theme.SecondaryDark
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import com.example.mytodoapp.ui.theme.Shapes
 import com.example.mytodoapp.viewmodels.TaskViewModel
+import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -68,6 +69,10 @@ fun NotificationCard(
     BackHandler(
         enabled = true
     ) {
+        currentTask
+            ?.apply { this.notificationDateTime = null }
+            ?.let { taskViewModel.update(it) }
+
         val intent = Intent(context, MainActivity::class.java)
         context.startActivity(intent)
     }
@@ -133,11 +138,15 @@ fun NotificationCard(
                             val fireTime = System.currentTimeMillis() +
                                     AlarmManager.INTERVAL_FIFTEEN_MINUTES
 
+                            currentTask.apply {
+                                this.uId = getId(this.uId)
+                                this.notificationDateTime = fireTime
+                            }
+
+                            taskViewModel.update(currentTask)
                             val alarmManager = Alarm(context)
                             alarmManager.set(
-                                currentTask.apply {
-                                    this.uId = getId(this.uId)
-                                },
+                                currentTask,
                                 currentCategory,
                                 fireTime
                             )

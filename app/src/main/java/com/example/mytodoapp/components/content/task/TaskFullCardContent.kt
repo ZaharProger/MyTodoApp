@@ -21,13 +21,12 @@ import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import com.example.mytodoapp.entities.ui.ValidationCase
 import com.example.mytodoapp.services.Alarm
+import com.example.mytodoapp.services.DateTimeConverter
 import com.example.mytodoapp.services.Validator
 import com.example.mytodoapp.ui.theme.SecondaryDark
 import com.example.mytodoapp.ui.theme.SecondaryLight
 import com.example.mytodoapp.ui.theme.Shapes
 import com.example.mytodoapp.viewmodels.TaskViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Composable
 fun TaskFullCardContent(
@@ -38,13 +37,22 @@ fun TaskFullCardContent(
     currentTask: Task?,
     taskViewModel: TaskViewModel = TaskViewModel(LocalContext.current)
 ) {
+    val dateTimeConverter = DateTimeConverter()
     val notificationPlaceholder = stringResource(id = R.string.notification_placeholder)
 
     val dataText = remember {
         mutableStateOf(TextFieldValue(currentTask?.data ?: ""))
     }
     val notificationDateTime = remember {
-        mutableStateOf(notificationPlaceholder)
+        mutableStateOf(if (currentTask != null) {
+            if (currentTask.notificationDateTime != null)
+                dateTimeConverter.formatToDate(currentTask.notificationDateTime!!)
+            else
+                notificationPlaceholder
+        }
+        else
+            notificationPlaceholder
+        )
     }
     val allowNotification = remember {
         mutableStateOf(false)
@@ -122,12 +130,16 @@ fun TaskFullCardContent(
 
                 correctFields.value = validationResult
                 if (!correctFields.value.containsValue(false)) {
+                    val fireTime = if (notificationDateTime.value == notificationPlaceholder) null
+                        else dateTimeConverter.convertToTimeStamp(notificationDateTime.value)
+
                     if (currentTask == null) {
                         taskViewModel.add(
                             Task(
                                 title = headerText.value.text.trim(),
                                 data = dataText.value.text.trim(),
-                                category = selectedCategory.value.uId
+                                category = selectedCategory.value.uId,
+                                notificationDateTime = fireTime
                             )
                         )
                     }
@@ -135,15 +147,11 @@ fun TaskFullCardContent(
                         currentTask.title = headerText.value.text.trim()
                         currentTask.data = dataText.value.text.trim()
                         currentTask.category = selectedCategory.value.uId
+                        currentTask.notificationDateTime = fireTime
                         taskViewModel.update(currentTask)
                     }
 
                     if (allowNotification.value) {
-                        val fireTime = SimpleDateFormat(
-                            "dd.MM.yyyy HH:mm",
-                            Locale.ROOT
-                        ).parse(notificationDateTime.value)!!.time
-
                         val alarm = Alarm(context)
                         alarm.set(
                             currentTask ?: Task(
@@ -152,7 +160,7 @@ fun TaskFullCardContent(
                                 category = selectedCategory.value.uId
                             ),
                             selectedCategory.value,
-                            fireTime
+                            fireTime!!
                         )
                     }
 

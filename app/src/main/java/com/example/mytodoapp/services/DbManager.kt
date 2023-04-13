@@ -11,7 +11,7 @@ import com.example.mytodoapp.entities.db.dao.TasksDao
 
 @Database(
     entities = [Category::class, Task::class],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 abstract class DbManager: RoomDatabase() {

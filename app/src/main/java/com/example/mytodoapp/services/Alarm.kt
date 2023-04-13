@@ -9,7 +9,6 @@ import com.example.mytodoapp.entities.db.Category
 import com.example.mytodoapp.entities.db.Task
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.random.Random
 
 class Alarm(context: Context) {
     private val _context = context
@@ -19,7 +18,7 @@ class Alarm(context: Context) {
     fun set(task: Task, category: Category, fireTime: Long) {
         val alarmIntent = PendingIntent.getBroadcast(
             _context,
-            Random.nextInt(1, Int.MAX_VALUE),
+            task.uId.toInt(),
             Intent(_context, AlarmReceiver::class.java).apply {
                 putExtra(IntentKeys.ALARM_TASK.stringValue, Json.encodeToString(task))
                 putExtra(IntentKeys.ALARM_CATEGORY.stringValue, Json.encodeToString(category))
@@ -29,10 +28,13 @@ class Alarm(context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        alarmManager?.set(
-            AlarmManager.RTC_WAKEUP,
-            fireTime,
-            alarmIntent
-        )
+        alarmManager?.let {
+            it.cancel(alarmIntent)
+            it.set(
+                AlarmManager.RTC_WAKEUP,
+                fireTime,
+                alarmIntent
+            )
+        }
     }
 }
