@@ -69,11 +69,14 @@ fun TaskFullCardHeader(
         )
 
         ExposedDropdownMenuBox(
+            modifier = Modifier
+                .padding(0.dp, 0.dp, 0.dp, 15.dp),
             expanded = isExpanded.value,
             onExpandedChange = {
                 isExpanded.value = !isExpanded.value
             }
         ) {
+            val reversedCategories = categories.reversed()
             val (r, g, b, a) = colorConverter.getRgba(selectedCategory.value.color)
 
             TextField(
@@ -112,7 +115,7 @@ fun TaskFullCardHeader(
                     isExpanded.value = false
                 }
             ) {
-                categories.forEach { category ->
+                reversedCategories.forEach { category ->
                     val (red, green, blue, alpha) = colorConverter
                         .getRgba(category.color)
                     val categoryColor = Color(red, green, blue, alpha)

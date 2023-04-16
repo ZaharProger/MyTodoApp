@@ -33,6 +33,7 @@ fun CategoriesPage(
     )
 
     if (categories.isNotEmpty()) {
+        val reversedCategories = categories.reversed()
         val colorConverter = ColorConverter(16)
 
         LazyVerticalGrid(
@@ -46,16 +47,16 @@ fun CategoriesPage(
             state = AppContext.categoriesListState
         ) {
             items(
-                count = categories.size + 1,
+                count = reversedCategories.size + 1,
                 key = {
-                    if (it == categories.size) {
+                    if (it == reversedCategories.size) {
                         -1
                     }
                     else {
-                        categories[it].uId
+                        reversedCategories[it].uId
                     }
                 }) {
-                if (it == categories.size) {
+                if (it == reversedCategories.size) {
                     AddButton(
                         Modifier.animateItemPlacement(),
                         isFabActive = false
@@ -65,7 +66,7 @@ fun CategoriesPage(
                     CategoryFullCard(
                         Modifier.animateItemPlacement(),
                         navController,
-                        categories[it],
+                        reversedCategories[it],
                         colorConverter,
                         currentCategory
                     )

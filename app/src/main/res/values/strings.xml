@@ -19,4 +19,7 @@
     <string name="delete_tasks_caption">Вы действительно хотите удалить выбранные задачи?</string>
     <string name="deletion_complete">Удаление завершено!</string>
     <string name="not_found">Вы не добавили ни одной задачи!</string>
+    <string name="languages_caption">Доступные языки</string>
+    <string name="translate_placeholder">Переводим...</string>
+    <string name="language_load_label">Загрузка языков...</string>
 </resources>

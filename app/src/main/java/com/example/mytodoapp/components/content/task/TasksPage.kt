@@ -41,22 +41,26 @@ fun TasksPage(
     val actualCategoriesState = rememberLazyListState()
     val colorConverter = ColorConverter(16)
 
-    val filteredTasks = tasks.filter {
-        if (currentCategory.value > 0) {
-            currentCategory.value == it.category
+    val filteredTasks = tasks
+        .filter {
+            if (currentCategory.value > 0) {
+                currentCategory.value == it.category
+            }
+            else {
+                true
+            }
         }
-        else {
-            true
+        .reversed()
+    val filteredCategories = categories
+        .filter {
+            if (currentCategory.value > 0) {
+                currentCategory.value == it.uId
+            }
+            else {
+                true
+            }
         }
-    }
-    val filteredCategories = categories.filter {
-        if (currentCategory.value > 0) {
-            currentCategory.value == it.uId
-        }
-        else {
-            true
-        }
-    }
+        .sortedBy { it.name.lowercase() }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

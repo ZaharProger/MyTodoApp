@@ -25,7 +25,7 @@ class Alarm(context: Context) {
 
                 action = "com.example.mytodoapp.alarm"
             },
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_CANCEL_CURRENT
         )
 
         alarmManager?.let {

@@ -39,7 +39,7 @@ fun TaskFullCardNotification(
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, 0.dp, 0.dp, 10.dp)
+            .padding(10.dp, 0.dp, 10.dp, 10.dp)
     ) {
         Checkbox(
             modifier = Modifier
@@ -76,7 +76,7 @@ fun TaskFullCardNotification(
     OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, 0.dp, 0.dp, 20.dp),
+            .padding(10.dp, 0.dp, 10.dp, 20.dp),
         enabled = allowNotification.value,
         contentPadding = PaddingValues(5.dp),
         shape = Shapes.small,

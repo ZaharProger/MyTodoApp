@@ -22,4 +22,5 @@ object AppContext {
 
     var currentRoute: String = Routes.TASKS.stringValue
     var selectedItems = mutableListOf<BaseEntity>()
+    var prevTaskData: String = ""
 }

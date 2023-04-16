@@ -62,7 +62,7 @@ class AlarmReceiver : BroadcastReceiver() {
             context,
             task.uId.toInt(),
             intent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val builder = NotificationCompat.Builder(context, id)

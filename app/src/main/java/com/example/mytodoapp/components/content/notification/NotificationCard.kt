@@ -70,7 +70,10 @@ fun NotificationCard(
         enabled = true
     ) {
         currentTask
-            ?.apply { this.notificationDateTime = null }
+            ?.apply {
+                this.uId = getId(this.uId)
+                this.notificationDateTime = null
+            }
             ?.let { taskViewModel.update(it) }
 
         val intent = Intent(context, MainActivity::class.java)
@@ -185,7 +188,7 @@ fun NotificationCard(
                     .padding(0.dp, 0.dp, 0.dp, 70.dp)
             ) {
                 Column(
-                    verticalArrangement = Arrangement.Top,
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -216,7 +219,8 @@ fun NotificationCard(
                     text = currentTask?.data ?: "",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(5.dp, 0.dp),
+                        .background(MaterialTheme.colors.primary)
+                        .padding(5.dp, 10.dp, 5.dp, 0.dp),
                     color = MaterialTheme.colors.secondary,
                     style = MaterialTheme.typography.body2,
                     textAlign = TextAlign.Center
